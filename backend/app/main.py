@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from app.routes import chat, otp, enroll, inactive, review
+from app.routes import chat, otp, enroll, inactive, review, admin_copilot
 from app.services.scheduler import start_scheduler, stop_scheduler
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -70,6 +70,7 @@ app.include_router(otp.router, prefix="/api", tags=["otp"])
 app.include_router(enroll.router, prefix="/api", tags=["enrollment"])
 app.include_router(inactive.router, prefix="/api", tags=["inactivity"])
 app.include_router(review.router, prefix="/api", tags=["reviews"])
+app.include_router(admin_copilot.router, prefix="/api", tags=["admin-copilot"])
 
 
 # ─── Core Endpoints ──────────────────────────────────────────────────────────

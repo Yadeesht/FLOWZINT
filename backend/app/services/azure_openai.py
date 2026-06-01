@@ -37,6 +37,7 @@ Name: {student_name}
 Phone: {student_phone}
 Course Interest: {course_interest}
 Enrolled: {is_enrolled}
+Enrolled Batch: {enrolled_batch}
 
 RULES:
 1. Always address the student by their first name ({student_name}).
@@ -94,6 +95,7 @@ def _build_system_prompt(student: dict) -> str:
         student_phone=student.get("phone", ""),
         course_interest=student.get("course_interest", "Not specified"),
         is_enrolled="Yes — " + str(student.get("enrolled_course", "")) if student.get("enrolled") else "No",
+        enrolled_batch=student.get("enrolled_batch", "None"),
     )
 
 
@@ -107,6 +109,23 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
     faq = _load_json("faq.json")
     name = student.get("name", "there")
     msg_lower = message.lower()
+
+    # ── Already Enrolled Check ──────────────────────────────────────────────
+    if student.get("enrolled"):
+        course_id = student.get("enrolled_course", "")
+        batch_id = student.get("enrolled_batch", "")
+        course_obj = next((c for c in courses if c["id"] == course_id), None)
+        batch_obj = next((b for b in batches if b["id"] == batch_id), None)
+        course_name = course_obj["name"] if course_obj else "AI/ML Bootcamp"
+        batch_time = batch_obj["time"] if batch_obj else "7-9 PM"
+        batch_start = batch_obj["start_date"] if batch_obj else "2026-07-10"
+        
+        if any(w in msg_lower for w in ["not have that info", "not have info", "why do you ask", "i already enrolled", "am i not enrolled", "tracked", "dont have"]):
+            return (
+                f"Oh, my apologies, {name}! I absolutely have that info. You are enrolled in the **{course_name}** under batch **{batch_id}** (starting {batch_start} at {batch_time}). "
+                "I must have overlooked it in our conversation history for a moment. All your enrollment data is perfectly tracked! 🚀",
+                "positive",
+            )
 
     # ── Intent: enroll ───────────────────────────────────────────────────────
     if any(w in msg_lower for w in ["enroll", "join", "register", "admission", "i want to"]):
@@ -181,6 +200,22 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
             "Courses with placement: AI/ML Bootcamp, Full Stack Web, Data Science Pro & Cloud Computing.\n"
             "We offer: mock interviews, resume reviews, LinkedIn optimisation, and direct referrals to partners like TCS, Infosys, Razorpay & top startups.\n\n"
             "Our last cohort had a 78% placement rate within 90 days of completion. 💪",
+            "positive",
+        )
+
+    # ── Intent: internship ───────────────────────────────────────────────────
+    if any(w in msg_lower for w in ["internship", "intern", "flowzint"]):
+        return (
+            f"Build your future with **FlowZint Corporate Internships**, {name}! 🚀\n\n"
+            "This is an elite, intensive **30-Day corporate program** engineered for ambitious freshers and students. "
+            "Execute real-world enterprise projects, secure an industry-recognized selection letter & certification, and unlock direct placement opportunities with our 50+ corporate hiring partners! Flat registration fee is only **₹1,999**.\n\n"
+            "**Curated Technical Tracks:**\n"
+            "1. 🧠 **Artificial Intelligence**: ML models, Neural Networks, Generative AI & LLM integration.\n"
+            "2. 📊 **Power BI Data Analytics**: Ingestion, ETL pipelines, DAX & interactive executive dashboards.\n"
+            "3. 💻 **Website Development**: Component-driven UI engineering, React.js, Responsive & APIs.\n"
+            "4. 📱 **App Development**: Cross-platform mobile engineering (Flutter / React Native) for iOS & Android.\n"
+            "5. 🌐 **Full Stack Engineering (Master Program)**: Microservices, database schema, secure JWT authentication & AWS/Vercel deployment.\n\n"
+            "Would you like to start your application or learn more about a specific domain? 😊",
             "positive",
         )
 

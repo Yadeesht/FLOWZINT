@@ -16,14 +16,14 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
  * @param {function} onNudgeSent - callback when nudge is dispatched
  */
 export function useInactivityTimer({ studentData, active, demoMode = false, onNudgeSent }) {
+  const { phone, name, courseInterest, sessionToken } = studentData || {}
   const timerRef = useRef(null)
   const nudgeSentRef = useRef(false)
 
   const TIMEOUT_MS = demoMode ? 30_000 : 3 * 60 * 1000  // 30s or 3 min
 
   const triggerNudge = useCallback(async () => {
-    if (!studentData?.phone || nudgeSentRef.current) return
-    if (!studentData?.courseInterest) return  // only nudge if student showed interest
+    if (!phone || nudgeSentRef.current) return
 
     nudgeSentRef.current = true
 
@@ -32,11 +32,11 @@ export function useInactivityTimer({ studentData, active, demoMode = false, onNu
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          phone: studentData.phone,
-          name: studentData.name,
-          course_interest: studentData.courseInterest,
+          phone,
+          name,
+          course_interest: courseInterest || 'AI/ML Bootcamp',
           discount: 15,
-          session_token: studentData.sessionToken || null,
+          session_token: sessionToken || null,
         }),
       })
 
@@ -44,7 +44,7 @@ export function useInactivityTimer({ studentData, active, demoMode = false, onNu
     } catch (err) {
       console.error('[Inactivity] Failed to send nudge:', err)
     }
-  }, [studentData, onNudgeSent])
+  }, [phone, name, courseInterest, sessionToken, onNudgeSent])
 
   const resetTimer = useCallback(() => {
     if (!active) return

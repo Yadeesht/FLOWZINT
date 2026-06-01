@@ -4,12 +4,120 @@
   "total_enrolled": 9,
   "conversion_rate": 27.3,
   "sentiment_breakdown": {
-    "positive": 27,
-    "neutral": 18,
+    "positive": 31,
+    "neutral": 20,
     "confused": 8,
     "frustrated": 3
   },
   "wa_outbound_log": [
+    {
+      "id": "wa-b4b8f3",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *603903*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T00:30:05",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-8b599d",
+      "type": "abandoned_nudge",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Hey Yadeesh! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
+      "timestamp": "2026-06-02T00:29:17",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-e63817",
+      "type": "abandoned_nudge",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Hey Yadeesh! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
+      "timestamp": "2026-06-02T00:28:19",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-02afa9",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *679492*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T00:27:28",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-5c8834",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-02T00:24:36",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-b74f83",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-02T00:24:36",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-425c0a",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *836124*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T00:23:33",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-11ea32",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-02T00:12:17",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-c3b959",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-02T00:12:17",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-61454c",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *773212*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T00:12:07",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-6eb60e",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-02T00:02:17",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-f83b32",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-02T00:02:17",
+      "status": "simulated"
+    },
     {
       "id": "wa-6dba01",
       "type": "reminder",
@@ -247,5 +355,5 @@
       "last_active": "2026-05-30T18:00:00"
     }
   ],
-  "last_updated": "2026-06-01T23:57:17"
+  "last_updated": "2026-06-02T00:30:36"
 }

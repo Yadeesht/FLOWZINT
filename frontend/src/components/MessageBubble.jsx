@@ -65,19 +65,6 @@ export default function MessageBubble({ message, studentName, isLatest }) {
             <div style={{ fontSize: 14, lineHeight: 1.7, color: '#1E1E2E' }}>
               {renderMd(message.content)}
             </div>
-            {message.sentiment && (
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 5,
-                marginTop: 10, paddingTop: 9, borderTop: '1px solid rgba(0,0,0,0.06)',
-              }}>
-                <div style={{
-                  width: 6, height: 6, borderRadius: '50%', background: sm.color, flexShrink: 0,
-                }} />
-                <span style={{ fontSize: 11, color: sm.color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  {sm.label}
-                </span>
-              </div>
-            )}
           </div>
           {ts && <span style={s.timestamp}>{ts}</span>}
         </div>

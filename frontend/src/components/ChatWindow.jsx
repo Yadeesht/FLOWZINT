@@ -22,13 +22,15 @@ const SENTIMENT_BORDER = {
   frustrated: '2px solid #FECDD3',
 }
 
-export default function ChatWindow({ sessionToken, student, welcomeMsg }) {
+export default function ChatWindow({ sessionToken, student: initialStudent, welcomeMsg }) {
+  const [student, setStudent] = useState(initialStudent)
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
   const [sentiment, setSentiment] = useState('neutral')
   const [demoMode, setDemoMode] = useState(false)
   const [nudgeSent, setNudgeSent] = useState(false)
+  const [nudgeModalOpen, setNudgeModalOpen] = useState(false)
   const [enrollOpen, setEnrollOpen] = useState(false)
   const [batches, setBatches] = useState([])
   const [enrollStatus, setEnrollStatus] = useState(null)
@@ -55,9 +57,13 @@ export default function ChatWindow({ sessionToken, student, welcomeMsg }) {
       courseInterest: student.courseInterest || student.course_interest,
       sessionToken,
     },
-    active: !student.enrolled,
+    active: true, // Always keep inactivity timer enabled for demo testing
     demoMode,
-    onNudgeSent: () => { setNudgeSent(true); setTimeout(() => setNudgeSent(false), 7000) },
+    onNudgeSent: () => {
+      setNudgeSent(true);
+      setNudgeModalOpen(true);
+      setTimeout(() => setNudgeSent(false), 7000);
+    },
   })
 
   const sendMessage = useCallback(async (text) => {
@@ -109,6 +115,12 @@ export default function ChatWindow({ sessionToken, student, welcomeMsg }) {
       if (!r.ok) throw new Error(d.detail)
       setEnrollData(d)
       setEnrollStatus('done')
+      setStudent(prev => ({
+        ...prev,
+        enrolled: true,
+        enrolled_course: d.course.id,
+        enrolled_batch: d.batch.id,
+      }))
       setMessages(p => [...p, {
         id: Date.now() + '-enroll', role: 'bot',
         content: `🎉 Congratulations ${student.name}! You're enrolled in **${d.course.name}**!\n\n📅 **Starts:** ${d.batch.start_date} · ${d.batch.time}\n👨‍🏫 **Instructor:** ${d.batch.instructor}\n\nA WhatsApp confirmation is on its way! 🚀`,
@@ -136,8 +148,6 @@ export default function ChatWindow({ sessionToken, student, welcomeMsg }) {
             <InfoRow label="Name" value={student.name} />
             <InfoRow label="Phone" value={`+91 ${student.phone}`} />
             <InfoRow label="Enrolled" value={student.enrolled ? '✅ Yes' : '—'} />
-            <InfoRow label="Sentiment" value={sentiment} />
-            <InfoRow label="Messages" value={messages.filter(m => m.role === 'user').length} />
           </div>
           <div style={{ margin: '0 12px', padding: '12px 16px', borderRadius: 12, background: '#F8F9FB', border: '1px solid rgba(0,0,0,0.06)' }}>
             <div style={{ fontSize: 12, fontWeight: 600, color: '#64748B', marginBottom: 8 }}>INACTIVITY TIMER</div>
@@ -340,6 +350,41 @@ export default function ChatWindow({ sessionToken, student, welcomeMsg }) {
                 </button>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Inactivity Nudge Explanatory Popup ─────────────────────────── */}
+      {nudgeModalOpen && (
+        <div style={s.modalBackdrop} onClick={() => setNudgeModalOpen(false)}>
+          <div style={{ ...s.modal, maxWidth: 460 }} className="anim-slide-up" onClick={e => e.stopPropagation()}>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <div style={{ fontSize: 44, marginBottom: 12 }}>📲</div>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#0A0A0F', margin: 0 }}>Proactive Cart Nudge Triggered!</h3>
+              <p style={{ fontSize: 12.5, color: '#94A3B8', marginTop: 4 }}>Simulated real-world student recovery scenario</p>
+            </div>
+            
+            <div style={{ background: '#F8F9FB', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 16, padding: '16px', marginBottom: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+                WhatsApp Message Received
+              </div>
+              <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.06)', borderRadius: '0px 12px 12px 12px', padding: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
+                <div style={{ fontWeight: 700, fontSize: 12.5, color: '#4F46E5', marginBottom: 4 }}>EduFlow AI Support</div>
+                <div style={{ fontSize: 13, color: '#1E1E2E', lineHeight: 1.5 }}>
+                  Hey **{student.name}**! 👋 We noticed you went quiet while checking our coaching programs. Here's a special **15% discount code** valid for the next 30 minutes to help you get started! 🚀<br/><br/>
+                  🎟️ Code: **DISCOUNT15**
+                </div>
+              </div>
+            </div>
+
+            <p style={{ fontSize: 13, color: '#4A5568', lineHeight: 1.6, textAlign: 'center', margin: '0 0 24px 0' }}>
+              In production, the student instantly receives this customized offer directly on their WhatsApp phone to recover the abandoned lead. You can inspect this live event log in the **Admin Dashboard Outbox Log**!
+            </p>
+
+            <button className="btn btn-primary" style={{ width: '100%', padding: '12px 20px', fontSize: 13.5 }} onClick={() => setNudgeModalOpen(false)}>
+              Got it, check Admin Console! →
+            </button>
           </div>
         </div>
       )}

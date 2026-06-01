@@ -235,6 +235,7 @@ const NAV = [
   { id: 'pipeline', label: 'Pipeline', icon: '⤳' },
   { id: 'wa_log', label: 'WA Log', icon: '◉' },
   { id: 'reviews', label: 'Reviews', icon: '★' },
+  { id: 'copilot', label: 'Admin Copilot', icon: '💬' },
 ]
 
 export default function AdminDashboard() {
@@ -245,6 +246,11 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [nudgeStatus, setNudgeStatus] = useState({})
   const [pipelineTab, setPipelineTab] = useState('hot')
+  const [copilotInput, setCopilotInput] = useState('')
+  const [copilotMessages, setCopilotMessages] = useState([
+    { role: 'assistant', content: '👋 Hello Administrator! I am your **Admin AI Copilot**.\n\nI have fully indexed our student pipeline, conversion metrics, and reviews. Ask me anything, or try these quick options below!' }
+  ])
+  const [copilotTyping, setCopilotTyping] = useState(false)
 
   async function load() {
     try {
@@ -273,6 +279,33 @@ export default function AdminDashboard() {
       setTimeout(() => setNudgeStatus(p => ({ ...p, [k]: null })), 4000)
       load()
     } catch { setNudgeStatus(p => ({ ...p, [k]: null })) }
+  }
+
+  async function sendCopilotQuery(overrideText) {
+    const text = (overrideText || copilotInput).trim()
+    if (!text || copilotTyping) return
+    setCopilotInput('')
+    const newMsgs = [...copilotMessages, { role: 'user', content: text }]
+    setCopilotMessages(newMsgs)
+    setCopilotTyping(true)
+
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/copilot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: text,
+          history: newMsgs.slice(-10).map(m => ({ role: m.role, content: m.content }))
+        })
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.detail || 'Failed to get copilot response')
+      setCopilotMessages(prev => [...prev, { role: 'assistant', content: data.response }])
+    } catch (err) {
+      setCopilotMessages(prev => [...prev, { role: 'assistant', content: `⚠️ Error: ${err.message}` }])
+    } finally {
+      setCopilotTyping(false)
+    }
   }
 
   const avgRating = reviews.length > 0 ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : '—'
@@ -351,6 +384,7 @@ export default function AdminDashboard() {
               {tab === 'pipeline' && `${students.enrolled.length} enrolled · ${students.hot_leads.length} hot leads · ${students.investigated.length} enquirers`}
               {tab === 'wa_log' && `${analytics?.wa_outbound_log?.length ?? 0} messages sent`}
               {tab === 'reviews' && `${reviews.length} reviews · avg ${avgRating} / 5`}
+              {tab === 'copilot' && "Query analytics, pipeline leads, and reviews interactively using AI."}
             </p>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -529,6 +563,124 @@ export default function AdminDashboard() {
 
             <div style={s.reviewGrid}>
               {reviews.map(r => <ReviewCard key={r.id} review={r} />)}
+            </div>
+          </div>
+        )}
+
+        {/* ── Admin Copilot ────────────────────────────────────────────── */}
+        {tab === 'copilot' && (
+          <div style={{ ...s.content, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', height: 'calc(100vh - 120px)' }}>
+            <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0, background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.06)' }}>
+              {/* Chat messages */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 16 }} className="scroll-area">
+                {copilotMessages.map((m, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                    {m.role === 'assistant' && (
+                      <div style={{
+                        width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                        background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
+                        border: '1px solid #C7D2FE',
+                        display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', fontSize: 14
+                      }}>
+                        🤖
+                      </div>
+                    )}
+                    <div style={{
+                      maxWidth: '80%',
+                      background: m.role === 'user' ? '#4F46E5' : '#FAFAFA',
+                      color: m.role === 'user' ? '#FFFFFF' : '#1E1E2E',
+                      borderRadius: m.role === 'user' ? '16px 16px 0 16px' : '0 16px 16px 16px',
+                      padding: '12px 16px',
+                      border: m.role === 'user' ? 'none' : '1px solid rgba(0,0,0,0.06)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+                      fontSize: 13.5,
+                      lineHeight: 1.6
+                    }}>
+                      <div style={{ whiteSpace: 'pre-line' }}>
+                        {m.content}
+                      </div>
+                    </div>
+                    {m.role === 'user' && (
+                      <div style={{
+                        width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                        background: '#EEF2FF', border: '1px solid #C7D2FE',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#4F46E5'
+                      }}>
+                        AD
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {copilotTyping && (
+                  <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                    <div style={{
+                      width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                      background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
+                      border: '1px solid #C7D2FE',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14
+                    }}>
+                      🤖
+                    </div>
+                    <div style={{ background: '#FAFAFA', border: '1px solid rgba(0,0,0,0.06)', borderRadius: '0 16px 16px 16px', padding: '14px 18px', maxWidth: 80 }}>
+                      <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 12 }}>
+                        <span className="dot-typing" />
+                        <span className="dot-typing" />
+                        <span className="dot-typing" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Quick suggestions chips */}
+              <div style={{ padding: '12px 20px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 8, flexWrap: 'wrap', background: '#FAFAFA' }}>
+                {[
+                  { emoji: '🔥', text: 'Who is our hottest lead right now?' },
+                  { emoji: '📈', text: 'Show me our active conversion rate' },
+                  { emoji: '⭐', text: 'Summary of course ratings & reviews' },
+                  { emoji: '📅', text: 'Status of upcoming batches' }
+                ].map(chip => (
+                  <button
+                    key={chip.text}
+                    className="chip"
+                    onClick={() => sendCopilotQuery(chip.text)}
+                    disabled={copilotTyping}
+                    style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer' }}
+                  >
+                    <span>{chip.emoji}</span> {chip.text}
+                  </button>
+                ))}
+              </div>
+
+              {/* Input section */}
+              <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 10 }}>
+                <div style={{ ...s.inputWrap, flex: 1 }}>
+                  <input
+                    className="input"
+                    style={{ border: 'none', outline: 'none', flex: 1, padding: '10px 14px', background: 'transparent', fontSize: 13.5 }}
+                    placeholder="Ask Admin Copilot about student pipeline, conversions, or reviews..."
+                    value={copilotInput}
+                    onChange={e => setCopilotInput(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendCopilotQuery()}
+                    disabled={copilotTyping}
+                  />
+                  <button
+                    onClick={() => sendCopilotQuery()}
+                    disabled={!copilotInput.trim() || copilotTyping}
+                    style={{
+                      width: 36, height: 36, borderRadius: 8, border: 'none',
+                      background: copilotInput.trim() && !copilotTyping ? '#4F46E5' : '#E2E8F0',
+                      color: copilotInput.trim() && !copilotTyping ? '#fff' : '#94A3B8',
+                      cursor: copilotInput.trim() && !copilotTyping ? 'pointer' : 'default',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0,
+                      transition: 'all 0.2s ease',
+                      boxShadow: copilotInput.trim() && !copilotTyping ? '0 4px 10px rgba(79,70,229,0.25)' : 'none'
+                    }}
+                  >
+                    {copilotTyping ? '⏳' : '↑'}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
