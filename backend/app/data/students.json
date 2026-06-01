@@ -1,0 +1,73 @@
+{
+  "sessions": {},
+  "verified_students": [
+    {
+      "phone": "9876543210",
+      "name": "Yadeesh",
+      "verified": true,
+      "course_interest": "AI/ML Bootcamp",
+      "enrolled": false,
+      "enrolled_course": null,
+      "enrolled_batch": null,
+      "enrolled_at": null,
+      "message_count": 0,
+      "sentiment_history": [],
+      "last_active": null,
+      "frustrated_count": 0
+    },
+    {
+      "phone": "9123456789",
+      "name": "Priya",
+      "verified": true,
+      "course_interest": "Full Stack Web Development",
+      "enrolled": true,
+      "enrolled_course": "full-stack-web",
+      "enrolled_batch": "batch-web-jun",
+      "enrolled_at": "2026-06-01T10:00:00",
+      "message_count": 12,
+      "sentiment_history": [
+        "positive",
+        "positive",
+        "neutral"
+      ],
+      "last_active": "2026-06-01T10:30:00",
+      "frustrated_count": 0
+    },
+    {
+      "phone": "9988776655",
+      "name": "Arjun",
+      "verified": true,
+      "course_interest": "Data Science Pro",
+      "enrolled": false,
+      "enrolled_course": null,
+      "enrolled_batch": null,
+      "enrolled_at": null,
+      "message_count": 5,
+      "sentiment_history": [
+        "neutral",
+        "positive",
+        "confused"
+      ],
+      "last_active": "2026-05-30T18:00:00",
+      "frustrated_count": 0
+    },
+    {
+      "phone": "7010599822",
+      "name": "Yadeesh",
+      "verified": true,
+      "course_interest": "AI/ML Bootcamp",
+      "enrolled": true,
+      "enrolled_course": "ai-ml-bootcamp",
+      "enrolled_batch": "batch-ai-jun",
+      "enrolled_at": "2026-06-01T20:29:18",
+      "message_count": 3,
+      "sentiment_history": [
+        "positive",
+        "positive",
+        "positive"
+      ],
+      "last_active": "2026-06-01T20:30:56",
+      "frustrated_count": 0
+    }
+  ]
+}

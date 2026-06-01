@@ -1,0 +1,82 @@
+[
+  {
+    "id": "rev-001",
+    "student_name": "Ravi Kumar",
+    "course": "AI/ML Bootcamp",
+    "rating": 5,
+    "comment": "Absolutely fantastic course! Priya ma'am explains everything so clearly. Got placed at a startup within 2 weeks of completing the bootcamp. Best investment I've made.",
+    "date": "2026-05-20"
+  },
+  {
+    "id": "rev-002",
+    "student_name": "Sneha Patel",
+    "course": "Full Stack Web Development",
+    "rating": 5,
+    "comment": "I came in knowing zero coding. 4 months later I built and deployed my own SaaS app. Siddharth sir is a legend. The community is super supportive.",
+    "date": "2026-05-18"
+  },
+  {
+    "id": "rev-003",
+    "student_name": "Mihir Shah",
+    "course": "Data Science Pro",
+    "rating": 4,
+    "comment": "Great content and very practical assignments. Would have loved more SQL depth. Overall really worth it — landed a data analyst role at a Big 4.",
+    "date": "2026-05-15"
+  },
+  {
+    "id": "rev-004",
+    "student_name": "Anisha Reddy",
+    "course": "AI/ML Bootcamp",
+    "rating": 5,
+    "comment": "The LLM and prompt engineering module alone was worth the full fee. I've already started freelancing with it. EduFlow is genuinely different from other institutes.",
+    "date": "2026-05-12"
+  },
+  {
+    "id": "rev-005",
+    "student_name": "Deepan Raj",
+    "course": "Cloud Computing with AWS & Azure",
+    "rating": 4,
+    "comment": "Passed my AWS SAA-C03 exam on the first attempt! Deepak sir's lab sessions are gold. The Terraform section could be a little more detailed but overall excellent.",
+    "date": "2026-05-10"
+  },
+  {
+    "id": "rev-006",
+    "student_name": "Pooja Nair",
+    "course": "Full Stack Web Development",
+    "rating": 5,
+    "comment": "Kavya ma'am's React sessions are the best I've found anywhere — including YouTube. The project we built for the capstone is now my portfolio piece. Highly recommend.",
+    "date": "2026-05-08"
+  },
+  {
+    "id": "rev-007",
+    "student_name": "Karthik Sundaram",
+    "course": "Ethical Hacking & Cyber Security",
+    "rating": 4,
+    "comment": "Really practical — we did actual CTF challenges and simulated attacks. The night batch timing works perfectly for working professionals. Good value for ₹8,999.",
+    "date": "2026-05-05"
+  },
+  {
+    "id": "rev-008",
+    "student_name": "Divya Menon",
+    "course": "AI/ML Bootcamp",
+    "rating": 5,
+    "comment": "Switched careers from a BPO job to an ML Engineer role in 5 months. EduFlow gave me the skills AND the confidence. The doubt sessions are what made the difference.",
+    "date": "2026-05-01"
+  },
+  {
+    "id": "rev-009",
+    "student_name": "Nikhil Tiwari",
+    "course": "Data Science Pro",
+    "rating": 5,
+    "comment": "The Power BI dashboard project we built is now live at my company. Vikram sir has a great way of connecting data concepts to real business problems. Amazing course.",
+    "date": "2026-04-28"
+  },
+  {
+    "id": "rev-010",
+    "student_name": "Lakshmi Priya",
+    "course": "Full Stack Web Development",
+    "rating": 5,
+    "comment": "As a homemaker returning to tech, I was nervous. The supportive community and patient instructors made this a life-changing experience. I'm now a junior dev at a startup!",
+    "date": "2026-04-25"
+  }
+]

@@ -1,0 +1,251 @@
+{
+  "total_sessions": 48,
+  "total_enquirers": 33,
+  "total_enrolled": 9,
+  "conversion_rate": 27.3,
+  "sentiment_breakdown": {
+    "positive": 27,
+    "neutral": 18,
+    "confused": 8,
+    "frustrated": 3
+  },
+  "wa_outbound_log": [
+    {
+      "id": "wa-6dba01",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T23:44:12",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-8bd0e8",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T23:44:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-5b4ca2",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T23:34:12",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-f4aed2",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T23:34:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-daf3c9",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T23:24:12",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-23b8ab",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T23:24:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-282e3a",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📚 Hi Yadeesh! Heads up — you have an *exam/quiz tomorrow* for *Ai Ml Bootcamp*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-01T22:44:51",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-673752",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📚 Hi Priya! Heads up — you have an *exam/quiz tomorrow* for *Full Stack Web*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-01T22:44:51",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-3b2f01",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-01T21:14:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-f0cae8",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-01T21:14:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-e23c8a",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-01T21:04:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-543254",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-01T21:04:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-5a625b",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T20:54:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-1e2e14",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T20:54:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-d789b0",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T20:44:12",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-4e9a94",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T20:44:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-1bd39c",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T20:34:12",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-131ecf",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-01T20:34:11",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-1f1e4d",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *235945*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-01T20:30:16",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-147ace",
+      "type": "enrollment_confirmation",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "🎉 Congratulations Yadeesh! You're officially enrolled in *AI/ML Bootcamp*!\n\n📅 *Batch:* batch-ai-jun\n🗓️ *Starts:* 2026-07-10\n⏰ *Time:* 7:00 PM - 9:00 PM IST | Mon, Wed, Fri\n👨‍🏫 *Instructor:* Priya Sharma\n🖥️ *Mode:* Online\n🔗 *Joining Link:* https://meet.google.com/eduflow-aiml-jun\n\nWelcome to the EduFlow family! See you on 2026-07-10. 🚀",
+      "timestamp": "2026-06-01T20:29:18",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-e43823",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *193075*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-01T20:26:03",
+      "status": "simulated"
+    },
+    {
+      "id": "wa-001",
+      "type": "otp",
+      "to": "+91 98765 43210",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is 847291. Valid for 10 minutes.",
+      "timestamp": "2026-06-01T10:05:00",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-002",
+      "type": "abandoned_nudge",
+      "to": "+91 99887 76655",
+      "name": "Arjun",
+      "message": "Hey Arjun! Still thinking about the Data Science Pro? Here's 15% off — valid for 30 mins only! ⚡ Only 12 seats left.",
+      "timestamp": "2026-05-30T18:05:00",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-003",
+      "type": "enrollment_confirmation",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "Congratulations Priya! ✅ You're enrolled in Full Stack Web Development. Batch: batch-web-jun | Starts: 5th July 2026 | 8-10 PM | Instructor: Siddharth Nair | Link: https://meet.google.com/eduflow-web-jun",
+      "timestamp": "2026-06-01T10:30:00",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-004",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📚 Reminder: Your Full Stack class is tomorrow (Wed) at 8:00 PM. Topic: React Hooks & State Management. Don't forget to complete the pre-class reading!",
+      "timestamp": "2026-06-01T18:00:00",
+      "status": "delivered"
+    }
+  ],
+  "hot_leads": [
+    {
+      "name": "Arjun",
+      "phone": "9988776655",
+      "course_interest": "Data Science Pro",
+      "message_count": 5,
+      "sentiment": "confused",
+      "score": 80,
+      "last_active": "2026-05-30T18:00:00"
+    }
+  ],
+  "last_updated": "2026-06-01T23:57:17"
+}
