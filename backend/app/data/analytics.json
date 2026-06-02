@@ -11,6 +11,15 @@
   },
   "wa_outbound_log": [
     {
+      "id": "wa-906512",
+      "type": "abandoned_nudge",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Hey Yadeesh! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
+      "timestamp": "2026-06-02T21:44:06",
+      "status": "delivered"
+    },
+    {
       "id": "wa-ba5c01",
       "type": "abandoned_nudge",
       "to": "+91 70105 99822",
@@ -328,5 +337,5 @@
       "last_active": "2026-05-30T18:00:00"
     }
   ],
-  "last_updated": "2026-06-02T21:40:57"
+  "last_updated": "2026-06-02T21:44:06"
 }
