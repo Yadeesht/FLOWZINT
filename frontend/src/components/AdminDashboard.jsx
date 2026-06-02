@@ -235,7 +235,6 @@ const NAV = [
   { id: 'pipeline', label: 'Pipeline', icon: '⤳' },
   { id: 'wa_log', label: 'WA Log', icon: '◉' },
   { id: 'reviews', label: 'Reviews', icon: '★' },
-  { id: 'copilot', label: 'Admin Copilot', icon: '💬' },
 ]
 
 export default function AdminDashboard() {

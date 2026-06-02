@@ -95,7 +95,7 @@ export default function OTPScreen({ onVerified }) {
 
           {/* Bottom stats */}
           <div style={s.statsRow}>
-            {[['2,000+', 'Students enrolled'], ['4.9★', 'Avg rating'], ['< 10s', 'Response time']].map(([n, l]) => (
+            {[['2,000+', 'Students enrolled'], ['4.9★', 'Avg rating'], ['50+', 'Hiring Partners']].map(([n, l]) => (
               <div key={l} style={{ textAlign: 'center' }}>
                 <div style={{ fontWeight: 800, fontSize: 18, color: '#1E1E2E' }}>{n}</div>
                 <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>{l}</div>
@@ -166,6 +166,12 @@ export default function OTPScreen({ onVerified }) {
                   {loading ? <Spinner /> : <>Send OTP to WhatsApp →</>}
                 </button>
 
+                {loading && (
+                  <p style={{ fontSize: 12.5, color: '#4F46E5', fontWeight: 'bold', textAlign: 'center', marginTop: 8 }}>
+                    ⌛ Request sent! It might take 10-15 seconds for the OTP to arrive on WhatsApp. Please wait...
+                  </p>
+                )}
+
                 <p style={s.hint}>We only use your number for verification. No spam, ever.</p>
               </form>
             </>
@@ -179,6 +185,9 @@ export default function OTPScreen({ onVerified }) {
                 <p style={s.formSub}>
                   We sent a 6-digit OTP to <strong>+91 {phone}</strong>.<br />
                   It expires in 10 minutes.
+                </p>
+                <p style={{ fontSize: 13, color: '#4F46E5', fontWeight: 'bold', marginTop: 10, lineHeight: 1.5 }}>
+                  ⚠️ Note: OTP delivery can take 10-15 seconds. Please wait.
                 </p>
               </div>
 

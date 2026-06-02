@@ -4,12 +4,102 @@
   "total_enrolled": 9,
   "conversion_rate": 27.3,
   "sentiment_breakdown": {
-    "positive": 34,
+    "positive": 38,
     "neutral": 21,
     "confused": 8,
     "frustrated": 3
   },
   "wa_outbound_log": [
+    {
+      "id": "wa-a1cf4d",
+      "type": "abandoned_nudge",
+      "to": "+91 99887 76655",
+      "name": "Arjun",
+      "message": "Hi Arjun! I see you're interested in our Data Science Pro course. I'd love to clarify any questions you have about fees, timings, or syllabus. How can I assist you today?",
+      "timestamp": "2026-06-02T22:19:17",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-b4c181",
+      "type": "custom_message",
+      "to": "+91 91701 0599822",
+      "name": "Student",
+      "message": "Hello! Currently, 9 people have enrolled in courses at EduFlow Coaching Institute. Let me know if you need details on specific courses or batches!",
+      "timestamp": "2026-06-02T22:18:25",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-7d2ab8",
+      "type": "custom_message",
+      "to": "+91 91701 0599822",
+      "name": "Student",
+      "message": "Hello! Currently, 9 people have enrolled in courses at EduFlow Coaching Institute. Let me know if you need details on specific courses or batches!",
+      "timestamp": "2026-06-02T22:18:10",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-f51441",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📚 Hi Yadeesh! Heads up — you have an *exam/quiz tomorrow* for *Ai Ml Bootcamp*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:17:11",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-70f9c1",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📚 Hi Priya! Heads up — you have an *exam/quiz tomorrow* for *Full Stack Web*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:17:11",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-f18f5a",
+      "type": "custom_message",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Hi Yadeesh! Here are your AI/ML Bootcamp details:\n- Course Fee: ₹12,999\n- Batch: ai-ml-bootcamp batch-ai-jun\n- Start Date: 2026-07-10\n- Time: 7:00 PM - 9:00 PM IST\n- Days: Mon, Wed, Fri\n- Mode: Online\n- Instructor: Priya Sharma\nSeats left: 3\n\nYou are all set! Reach out if you need anything else. 😊",
+      "timestamp": "2026-06-02T22:16:51",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-abc4cf",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *435196*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T22:13:13",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-87a865",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📚 Hi Yadeesh! Heads up — you have an *exam/quiz tomorrow* for *Ai Ml Bootcamp*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:07:10",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-3ea0b3",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📚 Hi Priya! Heads up — you have an *exam/quiz tomorrow* for *Full Stack Web*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:07:10",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-5768fc",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *260594*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T22:02:46",
+      "status": "delivered"
+    },
     {
       "id": "wa-a3777b",
       "type": "abandoned_nudge",
@@ -382,5 +472,5 @@
       "last_active": "2026-05-30T18:00:00"
     }
   ],
-  "last_updated": "2026-06-02T21:55:35"
+  "last_updated": "2026-06-02T22:22:10"
 }

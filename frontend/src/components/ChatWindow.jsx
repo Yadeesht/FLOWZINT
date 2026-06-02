@@ -84,7 +84,14 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
         body: JSON.stringify({ session_token: sessionToken, message: msg }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.detail)
+      if (!res.ok) {
+        if (res.status === 404 && data.detail?.toLowerCase().includes("session not found")) {
+          alert("Session expired. The page will reload to start a new session.")
+          window.location.reload()
+          return
+        }
+        throw new Error(data.detail)
+      }
       setSentiment(data.sentiment || 'neutral')
       setMessages(p => [...p, { id: Date.now() + '-b', role: 'bot', content: data.response, sentiment: data.sentiment, timestamp: new Date() }])
       if (isEnroll && !student.enrolled) setTimeout(openEnrollModal, 800)
@@ -113,7 +120,14 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
         body: JSON.stringify({ session_token: sessionToken, batch_id: batchId }),
       })
       const d = await r.json()
-      if (!r.ok) throw new Error(d.detail)
+      if (!r.ok) {
+        if (r.status === 404 && d.detail?.toLowerCase().includes("session not found")) {
+          alert("Session expired. The page will reload to start a new session.")
+          window.location.reload()
+          return
+        }
+        throw new Error(d.detail)
+      }
       setEnrollData(d)
       setEnrollStatus('done')
       setStudent(prev => ({
