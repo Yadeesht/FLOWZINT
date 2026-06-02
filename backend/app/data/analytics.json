@@ -11,6 +11,186 @@
   },
   "wa_outbound_log": [
     {
+      "id": "wa-2bbe9d",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-03T00:12:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-2e46ca",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-03T00:12:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-cde9eb",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-03T00:02:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-8c802d",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-03T00:02:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-c445e7",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:52:58",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-aeefec",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:52:58",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-2dd7a3",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:42:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-046e74",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:42:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-d8805e",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:32:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-7a4ba5",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:32:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-7dc4ad",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:22:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-06300f",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:22:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-3c48ff",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:02:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-c5c4e1",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
+      "timestamp": "2026-06-02T23:02:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-291524",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📚 Hi Yadeesh! Heads up — you have an *exam/quiz tomorrow* for *Ai Ml Bootcamp*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:52:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-d273f1",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📚 Hi Priya! Heads up — you have an *exam/quiz tomorrow* for *Full Stack Web*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:52:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-79aa1a",
+      "type": "abandoned_nudge",
+      "to": "+91 81485 24152",
+      "name": "dharani",
+      "message": "Hey dharani! Just checking in—would you like to secure your spot in the AI/ML Bootcamp? Use code COMEBACK15 for 15% off. Excited to help you start this journey! Let me know if you have any questions. 😊",
+      "timestamp": "2026-06-02T22:47:44",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-cd1741",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📚 Hi Yadeesh! Heads up — you have an *exam/quiz tomorrow* for *Ai Ml Bootcamp*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:42:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-fefec7",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📚 Hi Priya! Heads up — you have an *exam/quiz tomorrow* for *Full Stack Web*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:42:38",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-6e991c",
+      "type": "abandoned_nudge",
+      "to": "+91 81485 24152",
+      "name": "dharani",
+      "message": "Hi dharani! Just checking in to see if you had any questions about the AI/ML Bootcamp. To help you get started, here’s a 15% discount code: COMEBACK15. Let me know how I can assist you! 😊",
+      "timestamp": "2026-06-02T22:41:36",
+      "status": "delivered"
+    },
+    {
       "id": "wa-9a875b",
       "type": "custom_message",
       "to": "+91 81485 24152",
@@ -279,186 +459,6 @@
       "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
       "timestamp": "2026-06-02T21:05:52",
       "status": "delivered"
-    },
-    {
-      "id": "wa-246ed9",
-      "type": "reminder",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "📅 Hi yad! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
-      "timestamp": "2026-06-02T21:03:12",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-6e6a75",
-      "type": "reminder",
-      "to": "+91 91234 56789",
-      "name": "Priya",
-      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
-      "timestamp": "2026-06-02T21:03:12",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-71cdd7",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T21:02:43",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-5bdfac",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T20:59:34",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-956a85",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T20:53:48",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-5cb868",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T20:50:39",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-7ddc4e",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T20:47:30",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-9af21e",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T20:44:21",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-1451bb",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T20:41:12",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-f79188",
-      "type": "reminder",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "💳 Hi yad! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
-      "timestamp": "2026-06-02T20:38:32",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-dd76f0",
-      "type": "reminder",
-      "to": "+91 91234 56789",
-      "name": "Priya",
-      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
-      "timestamp": "2026-06-02T20:38:32",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-105519",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T20:38:03",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-03a96d",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Hey yad! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T20:33:54",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-a8e6a2",
-      "type": "otp",
-      "to": "+91 70105 99822",
-      "name": "yad",
-      "message": "Your EduFlow OTP is *445828*. Valid for 10 minutes. Do not share this with anyone. 🔐",
-      "timestamp": "2026-06-02T20:32:08",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-18d07b",
-      "type": "reminder",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
-      "timestamp": "2026-06-02T20:28:32",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-a6e27e",
-      "type": "reminder",
-      "to": "+91 91234 56789",
-      "name": "Priya",
-      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
-      "timestamp": "2026-06-02T20:28:32",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-6240e9",
-      "type": "otp",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "Your EduFlow OTP is *996732*. Valid for 10 minutes. Do not share this with anyone. 🔐",
-      "timestamp": "2026-06-02T20:11:16",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-1e2a48",
-      "type": "reminder",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
-      "timestamp": "2026-06-02T18:17:46",
-      "status": "simulated"
-    },
-    {
-      "id": "wa-c77b74",
-      "type": "reminder",
-      "to": "+91 91234 56789",
-      "name": "Priya",
-      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
-      "timestamp": "2026-06-02T18:17:46",
-      "status": "simulated"
-    },
-    {
-      "id": "wa-ece343",
-      "type": "reminder",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
-      "timestamp": "2026-06-02T00:52:00",
-      "status": "simulated"
     }
   ],
   "hot_leads": [
@@ -472,5 +472,5 @@
       "last_active": "2026-05-30T18:00:00"
     }
   ],
-  "last_updated": "2026-06-02T22:37:38"
+  "last_updated": "2026-06-03T00:12:38"
 }
