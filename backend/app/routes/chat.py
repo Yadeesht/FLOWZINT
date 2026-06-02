@@ -59,7 +59,7 @@ def _save_json(filename: str, data: dict | list):
         print(f"[Save Error] {filename}: {e}")
 
 
-def _update_student_record(phone: str, updates: dict):
+def update_student_record(phone: str, updates: dict):
     """Update a student's persistent record in students.json."""
     students = _load_json("students.json")
     for student in students.get("verified_students", []):
@@ -149,7 +149,7 @@ async def chat(req: ChatRequest):
 
     # Persist updates to students.json
     if student.get("phone"):
-        _update_student_record(student["phone"], {
+        update_student_record(student["phone"], {
             "message_count": student["message_count"],
             "last_active": student["last_active"],
             "course_interest": student.get("course_interest"),
@@ -204,6 +204,31 @@ def update_session_student(token: str, updates: dict):
     """Update student data in an active session."""
     if token in _sessions:
         _sessions[token]["student"].update(updates)
+
+
+def get_session_history(token: str) -> list | None:
+    """Retrieve history from an active session."""
+    if token in _sessions:
+        return _sessions[token]["history"]
+    return None
+
+
+def get_session_by_phone(phone: str) -> tuple[str | None, dict | None, list | None]:
+    """Search for an active session by student phone number."""
+    for token, sess in _sessions.items():
+        student = sess.get("student", {})
+        if student.get("phone") == phone:
+            return token, student, sess.get("history")
+    return None, None, None
+
+
+def get_persistent_student(phone: str) -> dict | None:
+    """Get student record from students.json by phone."""
+    students = _load_json("students.json")
+    for s in students.get("verified_students", []):
+        if s["phone"] == phone:
+            return s
+    return None
 
 
 # === WhatsApp Webhook Integration ===
@@ -310,7 +335,7 @@ async def incoming_whatsapp(
     session["student"] = student
 
     # 8. Save persistent updates
-    _update_student_record(phone, {
+    update_student_record(phone, {
         "message_count": student["message_count"],
         "last_active": student["last_active"],
         "course_interest": student.get("course_interest"),

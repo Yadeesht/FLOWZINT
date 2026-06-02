@@ -484,3 +484,117 @@ def chat_with_llm(message: str, history: list, student: dict) -> tuple[str, str]
     # Local fallback
     response, sentiment = _local_fallback(message, student, history)
     return response, sentiment
+
+
+def _local_nudge_fallback(student: dict, history: list) -> tuple[bool, str]:
+    if student.get("enrolled"):
+        return False, ""
+
+    name = student.get("name", "there")
+    course_interest = student.get("course_interest", "AI/ML Bootcamp")
+    sentiments = student.get("sentiment_history", [])
+    last_sentiment = sentiments[-1] if sentiments else "neutral"
+
+    if last_sentiment == "frustrated":
+        message = (
+            f"Hey {name}, I noticed you had some difficulties or questions during our chat. "
+            "I want to make sure you get the best support possible. 💙 "
+            "Would you like me to connect you with our student support manager directly?"
+        )
+    elif last_sentiment == "confused":
+        message = (
+            f"Hi {name}! 👋 I'm here to clarify any doubts you have about our *{course_interest}*. "
+            "Are you unsure about the batch timings, syllabus, or fee structure? Let me know!"
+        )
+    else:
+        message = (
+            f"Hey {name}! 👋 Still thinking about the *{course_interest}*? 🎓 "
+            "We have a couple of slots left in the upcoming batch. "
+            "Here's a 15% discount code *COMEBACK15* valid for 30 mins to lock in your spot! 🚀"
+        )
+
+    return True, message
+
+
+def generate_nudge_with_llm(student: dict, history: list) -> tuple[bool, str]:
+    """
+    Use Azure OpenAI (or local fallback) to check if a nudge is needed
+    based on the student's history and sentiment, and customize the message.
+    """
+    if _is_configured():
+        try:
+            from openai import AzureOpenAI
+            client = AzureOpenAI(
+                api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+                azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+                api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2024-02-15-preview"),
+            )
+            deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o")
+
+            # Extract last sentiment
+            sentiments = student.get("sentiment_history", [])
+            last_sentiment = sentiments[-1] if sentiments else "neutral"
+            course_interest = student.get("course_interest", "AI/ML Bootcamp")
+            name = student.get("name", "Student")
+
+            # Format history for prompt
+            history_text = ""
+            for h in history[-6:]:
+                history_text += f"{h['role'].capitalize()}: {h['content']}\n"
+
+            system_prompt = (
+                "You are the Lead Student Counselor at EduFlow. A student has gone inactive mid-conversation.\n"
+                "Your job is to decide if we should nudge them, and write a highly personalized, empathetic, non-repetitive nudge message.\n\n"
+                "RULES FOR DECISION:\n"
+                "1. SHOULD_NUDGE should be 'yes' only if the student has engaged but paused. If history is empty, SHOULD_NUDGE is 'yes' (we send a friendly greeting).\n"
+                "2. If the student is already enrolled, SHOULD_NUDGE must be 'no'.\n"
+                "3. If the student is frustrated, SHOULD_NUDGE is 'yes' but do NOT offer a discount or sales pitch. Instead, apologize warmly and ask if they would like to speak to a senior manager or have us call them.\n"
+                "4. If the student is confused, SHOULD_NUDGE is 'yes'. Offer to clarify their specific doubt (e.g. fees, timings, syllabus) and ask how you can help.\n"
+                "5. If the student is positive or neutral, SHOULD_NUDGE is 'yes'. Give them a friendly reminder and offer a warm 15% discount code (COMEBACK15) to help them get started.\n"
+                "6. The MESSAGE must be warm, friendly, natural, and under 60 words. Avoid generic templates. Address them by name.\n\n"
+                "Format your output EXACTLY as:\n"
+                "SHOULD_NUDGE: [yes/no]\n"
+                "REASON: [reason for decision]\n"
+                "MESSAGE: [your customized WhatsApp message text]"
+            )
+
+            prompt = (
+                f"Student Name: {name}\n"
+                f"Course Interest: {course_interest}\n"
+                f"Current Sentiment: {last_sentiment}\n"
+                f"Conversation History:\n{history_text}\n"
+            )
+
+            response = client.chat.completions.create(
+                model=deployment,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=200,
+            )
+
+            raw = response.choices[0].message.content.strip()
+            print(f"[Nudge AI Output]\n{raw}")
+
+            should_nudge = False
+            msg_text = ""
+            
+            # Parse SHOULD_NUDGE: yes/no
+            match_nudge = re.search(r"SHOULD_NUDGE:\s*(yes|no)", raw, re.IGNORECASE)
+            if match_nudge and match_nudge.group(1).lower() == "yes":
+                should_nudge = True
+
+            # Parse MESSAGE: text
+            match_msg = re.search(r"MESSAGE:\s*(.+)$", raw, re.IGNORECASE | re.DOTALL)
+            if match_msg:
+                msg_text = match_msg.group(1).strip()
+
+            return should_nudge, msg_text
+
+        except Exception as e:
+            print(f"[Nudge AI Error] {e} — falling back to local nudge generation")
+
+    # Local fallback
+    return _local_nudge_fallback(student, history)

@@ -110,14 +110,17 @@ def send_otp(phone: str, name: str, otp: str) -> dict:
 
 
 
-def send_abandoned_nudge(phone: str, name: str, course_interest: str, discount: int = 15) -> dict:
+def send_abandoned_nudge(phone: str, name: str, course_interest: str, discount: int = 15, custom_message: str | None = None) -> dict:
     """Send the abandoned enquiry recovery nudge via WhatsApp Node bot gateway."""
-    message = (
-        f"Hey {name}! 👋 Still thinking about the *{course_interest}*? "
-        f"🎓 Here's *{discount}% off* — valid for 30 mins only! ⚡ "
-        f"Only a few seats left. Reply here or come back to the chat to lock your spot. "
-        f"Use code *COMEBACK{discount}* at checkout!"
-    )
+    if custom_message:
+        message = custom_message
+    else:
+        message = (
+            f"Hey {name}! 👋 Still thinking about the *{course_interest}*? "
+            f"🎓 Here's *{discount}% off* — valid for 30 mins only! ⚡ "
+            f"Only a few seats left. Reply here or come back to the chat to lock your spot. "
+            f"Use code *COMEBACK{discount}* at checkout!"
+        )
     
     to_display = f"+91 {phone[:5]} {phone[5:]}"
     entry = _log_to_analytics("abandoned_nudge", to_display, name, message)

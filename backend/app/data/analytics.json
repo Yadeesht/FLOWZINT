@@ -11,6 +11,51 @@
   },
   "wa_outbound_log": [
     {
+      "id": "wa-a3777b",
+      "type": "abandoned_nudge",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Hey Yadeesh! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
+      "timestamp": "2026-06-02T21:55:35",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-0aeb6d",
+      "type": "abandoned_nudge",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Hey Yadeesh! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
+      "timestamp": "2026-06-02T21:52:26",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-75a065",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-02T21:49:44",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-4522d1",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
+      "timestamp": "2026-06-02T21:49:44",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-f1dbed",
+      "type": "abandoned_nudge",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "Hey Yadeesh! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
+      "timestamp": "2026-06-02T21:49:17",
+      "status": "delivered"
+    },
+    {
       "id": "wa-906512",
       "type": "abandoned_nudge",
       "to": "+91 70105 99822",
@@ -337,5 +382,5 @@
       "last_active": "2026-05-30T18:00:00"
     }
   ],
-  "last_updated": "2026-06-02T21:44:44"
+  "last_updated": "2026-06-02T21:55:35"
 }
