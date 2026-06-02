@@ -77,6 +77,22 @@
       ],
       "last_active": "2026-06-02T22:17:28",
       "frustrated_count": 0
+    },
+    {
+      "phone": "8148524152",
+      "name": "dharani",
+      "verified": true,
+      "course_interest": "AI/ML Bootcamp",
+      "enrolled": false,
+      "enrolled_course": null,
+      "enrolled_batch": null,
+      "enrolled_at": null,
+      "message_count": 1,
+      "sentiment_history": [
+        "positive"
+      ],
+      "last_active": "2026-06-02T22:34:30",
+      "frustrated_count": 0
     }
   ]
 }

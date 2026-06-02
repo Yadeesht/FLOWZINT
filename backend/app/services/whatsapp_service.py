@@ -18,9 +18,11 @@ DATA_DIR = Path(__file__).parent.parent / "data"
 
 
 def _is_configured() -> bool:
-    """Check if the test phone number is configured in .env."""
+    """Check if the WhatsApp bot configuration is active."""
     phone = os.getenv("WHATSAPP_PHONE", "").strip()
-    return bool(phone) and phone != "YOUR_WHATSAPP_PHONE"
+    if phone == "YOUR_WHATSAPP_PHONE":
+        return False
+    return True
 
 
 def _log_to_analytics(msg_type: str, to_phone: str, name: str, message: str) -> dict:
@@ -64,8 +66,12 @@ def _send_via_node_bot(phone: str, message: str, name: str, msg_type: str):
         print("[WhatsApp Service] Not configured. Falling back to simulation.")
         return
 
-    # Use the phone number configured in .env as recipient
-    target_phone = os.getenv("WHATSAPP_PHONE", phone).strip()
+    # Use the phone number configured in .env as recipient, or fallback to target phone parameter
+    env_phone = os.getenv("WHATSAPP_PHONE", "").strip()
+    if env_phone and env_phone != "YOUR_WHATSAPP_PHONE":
+        target_phone = env_phone
+    else:
+        target_phone = phone
 
     def worker():
         try:

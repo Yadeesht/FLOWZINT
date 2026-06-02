@@ -1,15 +1,69 @@
 {
-  "total_sessions": 48,
-  "total_enquirers": 33,
+  "total_sessions": 49,
+  "total_enquirers": 34,
   "total_enrolled": 9,
   "conversion_rate": 27.3,
   "sentiment_breakdown": {
-    "positive": 38,
+    "positive": 39,
     "neutral": 21,
     "confused": 8,
     "frustrated": 3
   },
   "wa_outbound_log": [
+    {
+      "id": "wa-9a875b",
+      "type": "custom_message",
+      "to": "+91 81485 24152",
+      "name": "dharani",
+      "message": "Hi dharani! Here are the AI/ML Bootcamp batch details you might like:\n\n1. batch-ai-jun: Starts 2026-07-10 | 7:00 PM - 9:00 PM IST | Mon, Wed, Fri | Instructor: Priya Sharma | Seats left: 3 | Mode: online\n2. batch-ai-jul: Starts 2026-08-01 | 10:00 AM - 12:00 PM IST | Tue, Thu, Sat | Instructor: Rahul Mehta | Seats left: 18 | Mode: hybrid\n3. batch-ai-aug: Starts 2026-09-05 | 6:00 PM - 8:00 PM IST | Mon, Wed, Fri | Instructor: Ananya Krishnan | Seats left: 28 | Mode: online\n\nCourse fee is ₹12,999 with EMI option at ₹4500/month. Let me know if you want to enroll or need more info!",
+      "timestamp": "2026-06-02T22:34:28",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-a74154",
+      "type": "otp",
+      "to": "+91 81485 24152",
+      "name": "dharani",
+      "message": "Your EduFlow OTP is *264439*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T22:33:43",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-b01839",
+      "type": "otp",
+      "to": "+91 81485 24152",
+      "name": "dharani",
+      "message": "Your EduFlow OTP is *526558*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T22:30:23",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-6baf52",
+      "type": "reminder",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "📚 Hi Yadeesh! Heads up — you have an *exam/quiz tomorrow* for *Ai Ml Bootcamp*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:27:10",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-bce6f3",
+      "type": "reminder",
+      "to": "+91 91234 56789",
+      "name": "Priya",
+      "message": "📚 Hi Priya! Heads up — you have an *exam/quiz tomorrow* for *Full Stack Web*. Topics covered: Modules 1-4. Open-book quiz. All the best! 💪",
+      "timestamp": "2026-06-02T22:27:10",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-edaf9f",
+      "type": "otp",
+      "to": "+91 81485 24152",
+      "name": "Yadeesh",
+      "message": "Your EduFlow OTP is *214742*. Valid for 10 minutes. Do not share this with anyone. 🔐",
+      "timestamp": "2026-06-02T22:26:39",
+      "status": "delivered"
+    },
     {
       "id": "wa-a1cf4d",
       "type": "abandoned_nudge",
@@ -405,60 +459,6 @@
       "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
       "timestamp": "2026-06-02T00:52:00",
       "status": "simulated"
-    },
-    {
-      "id": "wa-4ca1cc",
-      "type": "reminder",
-      "to": "+91 91234 56789",
-      "name": "Priya",
-      "message": "📅 Hi Priya! Your *Full Stack Web* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
-      "timestamp": "2026-06-02T00:51:59",
-      "status": "simulated"
-    },
-    {
-      "id": "wa-abe1f1",
-      "type": "otp",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "Your EduFlow OTP is *385044*. Valid for 10 minutes. Do not share this with anyone. 🔐",
-      "timestamp": "2026-06-02T00:51:50",
-      "status": "simulated"
-    },
-    {
-      "id": "wa-otp-new",
-      "type": "otp",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "Your EduFlow OTP is *603903*. Valid for 10 minutes. Do not share this with anyone. 🔐",
-      "timestamp": "2026-06-02T00:30:05",
-      "status": "simulated"
-    },
-    {
-      "id": "wa-nudge-new",
-      "type": "abandoned_nudge",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "Hey Yadeesh! 👋 Still thinking about the *AI/ML Bootcamp*? 🎓 Here's *15% off* — valid for 30 mins only! ⚡ Only a few seats left. Reply here or come back to the chat to lock your spot. Use code *COMEBACK15* at checkout!",
-      "timestamp": "2026-06-02T00:29:17",
-      "status": "simulated"
-    },
-    {
-      "id": "wa-enroll-new",
-      "type": "enrollment_confirmation",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "🎉 Congratulations Yadeesh! You're officially enrolled in *AI/ML Bootcamp*!\n\n📅 *Batch:* batch-ai-jun\n🗓️ *Starts:* 2026-07-10\n⏰ *Time:* 7:00 PM - 9:00 PM IST | Mon, Wed, Fri\n👨‍🏫 *Instructor:* Priya Sharma\n🖥️ *Mode:* Online\n🔗 *Joining Link:* https://meet.google.com/eduflow-aiml-jun\n\nWelcome to the EduFlow family! See you on 2026-07-10. 🚀",
-      "timestamp": "2026-06-02T00:28:10",
-      "status": "simulated"
-    },
-    {
-      "id": "wa-reminder-new",
-      "type": "reminder",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "📅 Hi Yadeesh! Your *Ai Ml Bootcamp* class is *tomorrow*. Topic: Advanced Concepts — Reviewing pre-class notes recommended! Don't forget to review the pre-class material! 🎓",
-      "timestamp": "2026-06-02T00:24:36",
-      "status": "simulated"
     }
   ],
   "hot_leads": [
@@ -472,5 +472,5 @@
       "last_active": "2026-05-30T18:00:00"
     }
   ],
-  "last_updated": "2026-06-02T22:22:10"
+  "last_updated": "2026-06-02T22:34:30"
 }
