@@ -8,10 +8,10 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 const CHIPS = [
   { emoji: '📚', label: 'Our courses', query: 'Tell me about your courses' },
-  { emoji: '💰', label: 'Fees & EMI', query: 'What are the fees and EMI options?' },
   { emoji: '📅', label: 'Batch timings', query: 'Show me batch timings and schedules' },
+  { emoji: '📲', label: 'WhatsApp Me details', query: 'Please send my batch and course details to my WhatsApp' },
+  { emoji: '💰', label: 'Fees & EMI', query: 'What are the fees and EMI options?' },
   { emoji: '🏆', label: 'Placements', query: 'Do you offer placement assistance?' },
-  { emoji: '📜', label: 'Certificate', query: 'Is the certificate valid and recognized?' },
   { emoji: '✅', label: 'Enroll now', query: 'I want to enroll' },
 ]
 
@@ -36,6 +36,7 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
   const [enrollStatus, setEnrollStatus] = useState(null)
   const [enrollData, setEnrollData] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [inputFocused, setInputFocused] = useState(false)
   const inputRef = useRef(null)
   const bottomRef = useRef(null)
 
@@ -136,8 +137,8 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
   const userMsgCount = messages.filter(m => m.role === 'user').length
 
   return (
-    <div style={{ display: 'flex', height: '100%', background: '#F8F9FB', position: 'relative' }}>
-      {/* ── Sidebar Info Panel ─────────────────────────────────────────── */}
+    <div style={{ display: 'flex', height: '100%', maxHeight: '100%', overflow: 'hidden', background: '#F8F9FB', position: 'relative' }}>
+      {/* === Sidebar Info Panel === */}
       {sidebarOpen && (
         <aside style={s.sidebar} className="anim-fade-in">
           <div style={s.sidebarHeader}>
@@ -174,8 +175,8 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
         </aside>
       )}
 
-      {/* ── Main Chat ──────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      {/* === Main Chat === */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', maxHeight: '100%', overflow: 'hidden' }}>
         {/* Header */}
         <header style={s.header}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -209,15 +210,6 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
           </div>
         </header>
 
-        {/* Nudge banner */}
-        {nudgeSent && (
-          <div style={s.nudgeBanner} className="anim-fade-up">
-            <span>📲</span>
-            <span>WhatsApp nudge sent to <strong>{student.name}</strong> — 15% discount offer delivered!</span>
-            <button onClick={() => setNudgeSent(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: '#4F46E5', fontSize: 16, lineHeight: 1, padding: 2 }}>×</button>
-          </div>
-        )}
-
         {/* Sentiment indicator strip */}
         <div style={{
           height: 3, background: 'transparent',
@@ -228,7 +220,7 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
 
         {/* Messages */}
         <div style={s.messagesWrap} className="scroll-area">
-          <div style={{ padding: '24px 20px', maxWidth: 780, margin: '0 auto', width: '100%' }}>
+          <div style={{ padding: '12px 24px', maxWidth: '100%', margin: '0 auto', width: '100%' }}>
             {messages.map((m, i) => (
               <MessageBubble
                 key={m.id}
@@ -245,7 +237,7 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
         {/* Quick chips — shown before first user message */}
         {userMsgCount === 0 && (
           <div style={s.chipsBar}>
-            <div style={{ maxWidth: 780, margin: '0 auto', width: '100%', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <div style={{ maxWidth: '100%', margin: '0 auto', width: '100%', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {CHIPS.map(c => (
                 <button key={c.label} className="chip" onClick={() => sendMessage(c.query)}>
                   <span>{c.emoji}</span>{c.label}
@@ -255,10 +247,75 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
           </div>
         )}
 
+        {/* Dynamic Suggested Prompts when Focusing Input */}
+        {inputFocused && (
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(10px)',
+            borderTop: '1px solid rgba(0,0,0,0.04)',
+            padding: '8px 16px',
+            flexShrink: 0,
+            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+          }} className="anim-fade-up">
+            <div style={{ maxWidth: '100%', margin: '0 auto', width: '100%' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span className="anim-float" style={{ fontSize: 12 }}>💡</span> Suggested Queries
+              </div>
+              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2 }} className="scroll-area">
+                {[
+                  { emoji: '🧠', label: 'AI/ML Bootcamp Syllabus', text: 'Tell me about the AI/ML Bootcamp course details and fees' },
+                  { emoji: '📲', label: 'WhatsApp details to me', text: 'Send my batch details to my WhatsApp' },
+                  { emoji: '💼', label: 'FlowZint Internship Tracks', text: 'Tell me about the FlowZint Corporate Internship domains' },
+                  { emoji: '💳', label: 'EMI & Payment Options', text: 'What EMI plans and installment options do you have?' }
+                ].map(sug => (
+                  <button
+                    key={sug.label}
+                    onMouseDown={() => sendMessage(sug.text)}
+                    style={{
+                      padding: '7px 14px',
+                      borderRadius: 9999,
+                      border: '1px solid rgba(79, 70, 229, 0.15)',
+                      background: '#EEF2FF',
+                      color: '#4F46E5',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      whiteSpace: 'nowrap',
+                      fontFamily: 'inherit',
+                      transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(79, 70, 229, 0.15)';
+                      e.currentTarget.style.background = '#4F46E5';
+                      e.currentTarget.style.color = '#FFFFFF';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.background = '#EEF2FF';
+                      e.currentTarget.style.color = '#4F46E5';
+                    }}
+                  >
+                    <span>{sug.emoji}</span> {sug.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Input bar */}
         <div style={s.inputBar}>
-          <div style={{ maxWidth: 780, margin: '0 auto', width: '100%', display: 'flex', gap: 10 }}>
-            <div style={s.inputWrap}>
+          <div style={{ maxWidth: '100%', margin: '0 auto', width: '100%', display: 'flex', gap: 10 }}>
+            <div style={{
+              ...s.inputWrap,
+              borderColor: inputFocused ? '#4F46E5' : 'rgba(0,0,0,0.10)',
+              boxShadow: inputFocused ? '0 4px 20px rgba(79,70,229,0.08), 0 0 0 3px rgba(79,70,229,0.12)' : '0 2px 12px rgba(0,0,0,0.03)'
+            }}>
               <input
                 ref={inputRef}
                 id="chat-input"
@@ -267,6 +324,8 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
                 placeholder="Ask anything about EduFlow courses…"
                 value={input}
                 onChange={e => setInput(e.target.value)}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setTimeout(() => setInputFocused(false), 200)}
                 onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
                 autoFocus
               />
@@ -275,11 +334,11 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
                 onClick={() => sendMessage()}
                 disabled={!input.trim() || typing}
                 style={{
-                  width: 40, height: 40, borderRadius: 10, border: 'none',
-                  background: input.trim() && !typing ? '#4F46E5' : '#E2E8F0',
+                  width: 40, height: 40, borderRadius: 9999, border: 'none',
+                  background: input.trim() && !typing ? 'linear-gradient(135deg, #4F46E5, #6366F1)' : '#E2E8F0',
                   color: input.trim() && !typing ? '#fff' : '#94A3B8',
                   cursor: input.trim() && !typing ? 'pointer' : 'default',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.25s ease',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 18, flexShrink: 0,
                   boxShadow: input.trim() && !typing ? '0 4px 12px rgba(79,70,229,0.3)' : 'none',
@@ -294,7 +353,7 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
         </div>
       </div>
 
-      {/* ── Enrollment Modal ───────────────────────────────────────────── */}
+      {/* === Enrollment Modal === */}
       {enrollOpen && (
         <div style={s.modalBackdrop} onClick={() => enrollStatus !== 'loading' && setEnrollOpen(false)}>
           <div style={s.modal} className="anim-slide-up" onClick={e => e.stopPropagation()}>
@@ -354,7 +413,7 @@ export default function ChatWindow({ sessionToken, student: initialStudent, welc
         </div>
       )}
 
-      {/* ── Inactivity Nudge Explanatory Popup ─────────────────────────── */}
+      {/* === Inactivity Nudge Explanatory Popup === */}
       {nudgeModalOpen && (
         <div style={s.modalBackdrop} onClick={() => setNudgeModalOpen(false)}>
           <div style={{ ...s.modal, maxWidth: 460 }} className="anim-slide-up" onClick={e => e.stopPropagation()}>
@@ -414,57 +473,51 @@ const s = {
   },
   header: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    padding: '12px 20px', background: '#FFFFFF',
+    padding: '8px 16px', background: '#FFFFFF',
     borderBottom: '1px solid rgba(0,0,0,0.06)',
     flexShrink: 0,
   },
   avatarHeader: {
-    width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+    width: 36, height: 36, borderRadius: 12, flexShrink: 0,
     background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
     border: '1px solid #C7D2FE',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     boxShadow: '0 2px 8px rgba(79,70,229,0.15)',
   },
-  nudgeBanner: {
-    display: 'flex', alignItems: 'center', gap: 10,
-    padding: '10px 20px', background: '#EEF2FF',
-    borderBottom: '1px solid #C7D2FE',
-    fontSize: 13, color: '#4F46E5', fontWeight: 500, flexShrink: 0,
-  },
   messagesWrap: {
     flex: 1, overflow: 'auto', minHeight: 0, background: '#F8F9FB',
   },
   chipsBar: {
-    padding: '10px 20px', background: '#FFFFFF',
+    padding: '6px 16px', background: '#FFFFFF',
     borderTop: '1px solid rgba(0,0,0,0.06)', flexShrink: 0,
   },
   inputBar: {
-    padding: '12px 20px 16px', background: '#FFFFFF',
+    padding: '8px 16px 12px', background: '#FFFFFF',
     borderTop: '1px solid rgba(0,0,0,0.06)', flexShrink: 0,
   },
   inputWrap: {
     flex: 1, display: 'flex', alignItems: 'center', gap: 8,
-    background: '#F8F9FB', border: '1px solid rgba(0,0,0,0.10)',
-    borderRadius: 14, padding: '4px 6px 4px 4px',
-    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+    background: '#F8F9FB', border: '1px solid rgba(0,0,0,0.08)',
+    borderRadius: 9999, padding: '4px 6px 4px 16px',
+    transition: 'all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.03)',
   },
   modalBackdrop: {
     position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)',
-    backdropFilter: 'blur(6px)', display: 'flex',
+    backdropFilter: 'blur(8px)', display: 'flex',
     alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 100,
   },
   modal: {
-    background: '#FFFFFF', borderRadius: 20, padding: '28px 28px',
+    background: '#FFFFFF', borderRadius: 28, padding: '28px 28px',
     width: '100%', maxWidth: 500, maxHeight: '88vh', overflowY: 'auto',
-    boxShadow: '0 24px 80px rgba(0,0,0,0.18)',
-    border: '1px solid rgba(0,0,0,0.08)',
+    boxShadow: '0 24px 80px rgba(0,0,0,0.12)',
+    border: '1px solid rgba(0,0,0,0.05)',
   },
   batchItem: {
     width: '100%', display: 'flex', alignItems: 'center',
     padding: '14px 16px', background: '#F8F9FB',
-    border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12,
+    border: '1px solid rgba(0,0,0,0.06)', borderRadius: 16,
     cursor: 'pointer', fontFamily: 'inherit',
-    transition: 'all 0.15s ease', textAlign: 'left',
+    transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)', textAlign: 'left',
   },
 }

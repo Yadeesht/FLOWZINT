@@ -97,7 +97,7 @@ export function TypingIndicator() {
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#4F46E5"/>
         </svg>
       </div>
-      <div style={{ ...s.botBubble, padding: '14px 18px', maxWidth: 80 }}>
+      <div style={{ ...s.botBubble, padding: '10px 14px', maxWidth: 80 }}>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 16 }}>
           <span className="dot-typing" />
           <span className="dot-typing" />
@@ -110,10 +110,10 @@ export function TypingIndicator() {
 
 const s = {
   botRow: {
-    display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 18,
+    display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10,
   },
   botAvatar: {
-    width: 32, height: 32, borderRadius: 9, flexShrink: 0,
+    width: 32, height: 32, borderRadius: 12, flexShrink: 0,
     background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
     border: '1px solid #C7D2FE',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -126,22 +126,22 @@ const s = {
   botBubble: {
     background: '#FFFFFF',
     border: '1px solid rgba(0,0,0,0.08)',
-    borderRadius: '4px 16px 16px 16px',
-    padding: '14px 18px',
+    borderRadius: '4px 20px 20px 20px',
+    padding: '10px 14px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
   },
   userRow: {
     display: 'flex', gap: 10, alignItems: 'flex-start',
-    justifyContent: 'flex-end', marginBottom: 18,
+    justifyContent: 'flex-end', marginBottom: 10,
   },
   userBubble: {
     background: 'linear-gradient(135deg, #4F46E5, #6366F1)',
-    borderRadius: '16px 4px 16px 16px',
-    padding: '12px 18px',
+    borderRadius: '20px 4px 20px 20px',
+    padding: '10px 14px',
     boxShadow: '0 4px 16px rgba(79,70,229,0.25)',
   },
   userAvatar: {
-    width: 32, height: 32, borderRadius: 9, flexShrink: 0,
+    width: 32, height: 32, borderRadius: 12, flexShrink: 0,
     background: '#EEF2FF', border: '1px solid #C7D2FE',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
   },

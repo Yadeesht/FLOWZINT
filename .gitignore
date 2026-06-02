@@ -1,3 +1,34 @@
 .agent/
 .env
 **/.env
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Python Virtual Environments
+.venv/
+venv/
+ENV/
+
+# Next.js / React build outputs
+.next/
+out/
+build/
+dist/
+
+# WhatsApp Bot Sessions & Caches
+whatsapp_session/
+**/whatsapp_session/
+.wwebjs_cache/
+**/.wwebjs_cache/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

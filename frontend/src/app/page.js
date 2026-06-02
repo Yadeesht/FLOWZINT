@@ -123,7 +123,7 @@ export default function Home() {
             <div style={s.cardMeta}>ANALYTICS & CONVERSIONS</div>
             <h3 style={s.cardTitle}>Admin Dashboard</h3>
             <p style={s.cardDesc}>
-              Dive into management analytics. Monitor student pipeline groups, inspect cumulative sentiment models, trigger manual Twilio nudges, and observe real-time simulated WhatsApp messages.
+              Dive into management analytics. Monitor student pipeline groups, inspect cumulative sentiment models, trigger manual recovery nudges, and observe real-time simulated WhatsApp messages.
             </p>
             <ul style={s.featuresList}>
               <li>📈 <strong>Live student pipeline</strong> analytics</li>

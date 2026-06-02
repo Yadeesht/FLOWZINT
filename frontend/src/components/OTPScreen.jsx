@@ -187,7 +187,7 @@ export default function OTPScreen({ onVerified }) {
                   <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                     <span style={{ fontSize: 18, flexShrink: 0 }}>🔧</span>
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: 13, color: '#92400E' }}>Demo Mode — Twilio not configured</div>
+                      <div style={{ fontWeight: 700, fontSize: 13, color: '#92400E' }}>Demo Mode — WHATSAPP_PHONE not set in .env</div>
                       <div style={{ fontSize: 13, color: '#B45309', marginTop: 4 }}>
                         Your OTP: <span style={{ fontFamily: 'Geist Mono, monospace', fontWeight: 700, fontSize: 18, letterSpacing: 4, color: '#78350F' }}>{demoOtp}</span>
                       </div>
@@ -253,7 +253,7 @@ function ErrorBox({ msg }) {
 
 const s = {
   root: {
-    height: '100vh', display: 'flex', background: '#F8F9FB', overflow: 'hidden',
+    height: '100%', display: 'flex', background: '#F8F9FB', overflow: 'hidden',
   },
   brand: {
     width: 420, flexShrink: 0, background: '#FFFFFF',

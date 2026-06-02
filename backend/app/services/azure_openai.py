@@ -19,6 +19,8 @@ try:
 except ImportError:
     OPENAI_AVAILABLE = False
 
+from app.services import whatsapp_service
+
 DATA_DIR = Path(__file__).parent.parent / "data"
 
 SYSTEM_PROMPT_TEMPLATE = """You are EduFlow AI, the intelligent support assistant for EduFlow Coaching Institute. You help students with course enquiries, enrollment, batch schedules, and support queries.
@@ -50,6 +52,8 @@ RULES:
 8. Never make up fees, dates, or data not in the provided context.
 9. Use emojis sparingly but warmly. 
 10. If a student asks about course details, always mention the specific fee and batch timing.
+11. You are fully capable of sending WhatsApp messages directly. Never say you cannot send WhatsApp messages. If a student asks you to send batch details, discount codes, confirmations, or information to their WhatsApp, or says "whatsapp me" / "send this to whatsapp", use the 'send_whatsapp_message' tool to send it to their phone number, and then confirm in your text reply that you have sent it.
+12. Proactively offer to send details to their WhatsApp when explaining batches, schedules, or enrolling (e.g. "Would you like me to send these batch details to your WhatsApp?").
 
 TONE: Warm, clear, encouraging. Not corporate. Not robotic."""
 
@@ -109,6 +113,58 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
     faq = _load_json("faq.json")
     name = student.get("name", "there")
     msg_lower = message.lower()
+    # ── WhatsApp Trigger Check ──────────────────────────────────────────────
+    whatsapp_keywords = ["whatsapp", "text me", "send me", "message me", "ping me", "share on", "forward to", "send to"]
+    if any(w in msg_lower for w in whatsapp_keywords):
+        # 1. Look for quoted string in message
+        quotes = re.findall(r'"([^"]*)"', message)
+        if not quotes:
+            quotes = re.findall(r"'([^']*)'", message)
+        
+        custom_msg = quotes[0] if quotes else None
+        
+        # 2. Look for "saying ..." or "texting ..." or "message ..."
+        if not custom_msg:
+            match = re.search(r'(?:saying|texting|message|content|with)\s+(.+)$', message, re.IGNORECASE)
+            if match:
+                custom_msg = match.group(1).strip()
+                custom_msg = re.sub(r'^["\'\s]+|["\'\s]+$', '', custom_msg)
+        
+        # 3. If no custom message, check if there is a last reply in history
+        if not custom_msg:
+            last_reply = None
+            for h in reversed(history):
+                if h.get("role") in ["assistant", "bot"]:
+                    last_reply = h.get("content")
+                    break
+            if last_reply:
+                custom_msg = last_reply
+        
+        # 4. If still no custom message, send batch/course details
+        if not custom_msg or any(w in msg_lower for w in ["batch", "course", "schedule", "detail", "timing"]):
+            course_interest = student.get("course_interest", "AI/ML Bootcamp") or "AI/ML Bootcamp"
+            course_obj = next((c for c in courses if course_interest.lower() in c["name"].lower()), courses[0])
+            batch_obj = next((b for b in batches if b["course_id"] == course_obj["id"]), batches[0])
+            
+            custom_msg = (
+                f"Hey {name}! 🎓 Here are the batch details you requested:\n\n"
+                f"📍 *Course:* {course_obj['name']}\n"
+                f"🗓️ *Starts:* {batch_obj['start_date']}\n"
+                f"⏰ *Timing:* {batch_obj['time']} | {batch_obj['days']}\n"
+                f"👨‍🏫 *Instructor:* {batch_obj['instructor']}\n"
+                f"🚪 *Seats Left:* {batch_obj['seats_left']} slots\n\n"
+                f"Let us know if you want to enroll! 🚀"
+            )
+        
+        whatsapp_service.send_custom_message(
+            phone=student.get("phone", ""),
+            name=name,
+            message=custom_msg
+        )
+        return (
+            f"I have successfully sent those details directly to your WhatsApp number (+91 {student.get('phone')})! 🚀 Check your phone and let me know if you need anything else.",
+            "positive"
+        )
 
     # ── Already Enrolled Check ──────────────────────────────────────────────
     if student.get("enrolled"):
@@ -125,6 +181,13 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
                 f"Oh, my apologies, {name}! I absolutely have that info. You are enrolled in the **{course_name}** under batch **{batch_id}** (starting {batch_start} at {batch_time}). "
                 "I must have overlooked it in our conversation history for a moment. All your enrollment data is perfectly tracked! 🚀",
                 "positive",
+            )
+
+        if any(w in msg_lower for w in ["hi", "hello", "hey", "namaste", "good"]):
+            return (
+                f"Hey {name}! 👋 Great to have you back! As an enrolled student in our **{course_name}** under batch **{batch_id}** (starts {batch_start} at {batch_time}), "
+                "I'm here to help you prepare. You can ask me about batch schedules, course instructors, placement assistance, or fee installments! 😊",
+                "positive"
             )
 
     # ── Intent: enroll ───────────────────────────────────────────────────────
@@ -330,13 +393,89 @@ def chat_with_llm(message: str, history: list, student: dict) -> tuple[str, str]
                 messages.append(h)
             messages.append({"role": "user", "content": message})
 
+            tools = [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "send_whatsapp_message",
+                        "description": "Send a WhatsApp message directly to the student's phone number with course details, batch schedules, reminders, or general announcements.",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "phone": {
+                                    "type": "string",
+                                    "description": "The 10-digit phone number of the student (e.g., '917010599822')."
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "The full text message to send to the student's WhatsApp."
+                                }
+                            },
+                            "required": ["phone", "message"]
+                        }
+                    }
+                }
+            ]
+
             response = client.chat.completions.create(
                 model=deployment,
                 messages=messages,
+                tools=tools,
+                tool_choice="auto",
                 temperature=0.7,
                 max_tokens=400,
             )
-            raw = response.choices[0].message.content
+
+            response_message = response.choices[0].message
+            tool_calls = getattr(response_message, "tool_calls", None)
+
+            if tool_calls:
+                # Safely serialize tool calls to dictionary format
+                tool_calls_list = []
+                for tc in tool_calls:
+                    tool_calls_list.append({
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {
+                            "name": tc.function.name,
+                            "arguments": tc.function.arguments
+                        }
+                    })
+                messages.append({
+                    "role": "assistant",
+                    "content": response_message.content,
+                    "tool_calls": tool_calls_list
+                })
+
+                # Process all tool calls
+                for tool_call in tool_calls:
+                    if tool_call.function.name == "send_whatsapp_message":
+                        args = json.loads(tool_call.function.arguments)
+                        whatsapp_service.send_custom_message(
+                            phone=args.get("phone"),
+                            name=student.get("name", "Student"),
+                            message=args.get("message")
+                        )
+
+                        # Append tool response
+                        messages.append({
+                            "tool_call_id": tool_call.id,
+                            "role": "tool",
+                            "name": "send_whatsapp_message",
+                            "content": json.dumps({"status": "success", "message": "WhatsApp message sent successfully"})
+                        })
+
+                # Retrieve final text response from model
+                final_response = client.chat.completions.create(
+                    model=deployment,
+                    messages=messages,
+                    temperature=0.7,
+                    max_tokens=400,
+                )
+                raw = final_response.choices[0].message.content
+                return parse_sentiment(raw)
+
+            raw = response_message.content
             return parse_sentiment(raw)
 
         except Exception as e:

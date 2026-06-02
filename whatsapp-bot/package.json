@@ -1,0 +1,14 @@
+{
+  "name": "eduflow-whatsapp-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp automation gateway for EduFlow AI using whatsapp-web.js",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.23.0"
+  }
+}

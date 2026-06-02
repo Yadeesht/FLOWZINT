@@ -15,7 +15,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.services import twilio_service
+from app.services import whatsapp_service
 from app.routes.chat import get_session_student, update_session_student
 
 router = APIRouter()
@@ -108,7 +108,7 @@ async def enroll_student(req: EnrollRequest):
         print(f"[Analytics Error] {e}")
 
     # Send WhatsApp confirmation
-    wa_result = twilio_service.send_enrollment_confirmation(
+    wa_result = whatsapp_service.send_enrollment_confirmation(
         phone=phone,
         name=student["name"],
         course=course,

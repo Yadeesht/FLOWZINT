@@ -14,7 +14,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.services import twilio_service
+from app.services import whatsapp_service
 from app.routes.chat import create_session
 
 router = APIRouter()
@@ -120,7 +120,7 @@ async def send_otp(req: SendOTPRequest):
         "expires_at": (datetime.now() + timedelta(minutes=10)).isoformat(),
     }
 
-    result = twilio_service.send_otp(phone=phone, name=req.name.strip(), otp=otp)
+    result = whatsapp_service.send_otp(phone=phone, name=req.name.strip(), otp=otp)
 
     return {
         "success": True,
@@ -154,6 +154,19 @@ async def verify_otp(req: VerifyOTPRequest):
 
     is_returning = student.get("message_count", 0) > 0
 
+    # Contextual welcome message based on enrollment status
+    welcome_msg = ""
+    if student.get("enrolled"):
+        course_id = student.get("enrolled_course", "")
+        courses = _load_json("courses.json")
+        course_obj = next((c for c in courses if c["id"] == course_id), None)
+        course_name = course_obj["name"] if course_obj else "AI/ML Bootcamp"
+        welcome_msg = f"Welcome back, {student['name']}! 👋 You are enrolled in our **{course_name}**. How can I assist you with your schedule or course details today? 🎓"
+    elif is_returning:
+        welcome_msg = f"Welcome back, {student['name']}! 👋 Great to see you again. What course details or batch schedules can I help you explore today? 🎓"
+    else:
+        welcome_msg = f"Welcome to EduFlow, {student['name']}! 🎓 I'm your AI Academic Advisor. Ask me anything about our premium bootcamps, fees, batch slots, or corporate internships!"
+
     return {
         "success": True,
         "session_token": session_token,
@@ -164,5 +177,5 @@ async def verify_otp(req: VerifyOTPRequest):
             "course_interest": student.get("course_interest"),
             "is_returning": is_returning,
         },
-        "message": f"Welcome back, {student['name']}! 👋" if is_returning else f"Welcome to EduFlow, {student['name']}! 🎓",
+        "welcomeMsg": welcome_msg,
     }

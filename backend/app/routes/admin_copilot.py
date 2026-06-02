@@ -58,7 +58,8 @@ RULES:
 2. Be professional, analytical, and insightful. Highlight key business trends where relevant (e.g. drop-offs, popular courses, high conversion opportunities).
 3. If asked to summarize reviews, provide a brief synthesis of student sentiment.
 4. Keep responses clear and structured using markdown tables or bullet points where useful.
-5. If the admin asks to "nudge" someone or check something, explain that they can do this directly from the pipeline tab.
+5. You are fully capable of sending WhatsApp messages directly. Never say you cannot send WhatsApp messages. If the administrator asks you to nudge a student, send a message to a student, or text them details, use the 'send_whatsapp_message' tool to send it immediately.
+6. Proactively offer to send notifications, details, or reminders to students via WhatsApp (e.g. "Would you like me to send a WhatsApp nudge/reminder with these details to Arjun?").
 """
 
 @router.post("/admin/copilot")
@@ -115,13 +116,87 @@ async def admin_copilot(req: CopilotRequest):
                 messages.append(h)
             messages.append({"role": "user", "content": req.query})
 
+            tools = [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "send_whatsapp_message",
+                        "description": "Send an arbitrary WhatsApp message directly to a student's phone number.",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "phone": {
+                                    "type": "string",
+                                    "description": "The 10-digit phone number of the student (e.g., '917010599822')."
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "The message body to send via WhatsApp."
+                                }
+                            },
+                            "required": ["phone", "message"]
+                        }
+                    }
+                }
+            ]
+
             response = client.chat.completions.create(
                 model=deployment,
                 messages=messages,
+                tools=tools,
+                tool_choice="auto",
                 temperature=0.4,
                 max_tokens=500,
             )
-            raw = response.choices[0].message.content
+            
+            response_message = response.choices[0].message
+            tool_calls = getattr(response_message, "tool_calls", None)
+
+            if tool_calls:
+                # Safely serialize tool calls to dictionary format
+                tool_calls_list = []
+                for tc in tool_calls:
+                    tool_calls_list.append({
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {
+                            "name": tc.function.name,
+                            "arguments": tc.function.arguments
+                        }
+                    })
+                messages.append({
+                    "role": "assistant",
+                    "content": response_message.content,
+                    "tool_calls": tool_calls_list
+                })
+                
+                from app.services import whatsapp_service
+                for tool_call in tool_calls:
+                    if tool_call.function.name == "send_whatsapp_message":
+                        args = json.loads(tool_call.function.arguments)
+                        whatsapp_service.send_custom_message(
+                            phone=args.get("phone"),
+                            name="Student",
+                            message=args.get("message")
+                        )
+
+                        messages.append({
+                            "tool_call_id": tool_call.id,
+                            "role": "tool",
+                            "name": "send_whatsapp_message",
+                            "content": json.dumps({"status": "success", "message": "WhatsApp sent successfully"})
+                        })
+
+                final_response = client.chat.completions.create(
+                    model=deployment,
+                    messages=messages,
+                    temperature=0.4,
+                    max_tokens=500,
+                )
+                raw = final_response.choices[0].message.content
+                return {"response": raw}
+
+            raw = response_message.content
             return {"response": raw}
         except Exception as e:
             print(f"[Admin Copilot Azure Error] {e} — falling back")
@@ -131,6 +206,58 @@ async def admin_copilot(req: CopilotRequest):
     total_rating = sum(r["rating"] for r in reviews_db.get("reviews", [])) if isinstance(reviews_db, dict) else sum(r["rating"] for r in reviews_db)
     reviews_list = reviews_db.get("reviews", []) if isinstance(reviews_db, dict) else reviews_db
     avg_rating = round(total_rating / len(reviews_list), 1) if reviews_list else 4.8
+
+    # Local Fallback: WhatsApp Send Trigger
+    if any(w in q_lower for w in ["send whatsapp", "whatsapp", "nudge", "text", "send message"]):
+        import re
+        from app.services import whatsapp_service
+        
+        # 1. Parse phone number
+        phone_match = re.search(r'\b(91)?(\d{10})\b', req.query)
+        target_phone = phone_match.group(2) if phone_match else None
+        target_name = "Student"
+        
+        # 2. If no phone number, search student list by name
+        if not target_phone:
+            for s in verified:
+                s_name = s.get("name", "")
+                if s_name and s_name.lower() in q_lower:
+                    target_phone = s.get("phone")
+                    target_name = s_name
+                    break
+        
+        # 3. Fallback to first hot lead or default if still None
+        if not target_phone:
+            if hot_leads:
+                target_phone = hot_leads[0]["phone"]
+                target_name = hot_leads[0]["name"]
+            else:
+                target_phone = "7010599822"
+                target_name = "Arjun"
+        
+        # 4. Extract message content (quoted text or text after certain keywords)
+        quotes = re.findall(r'"([^"]*)"', req.query)
+        if not quotes:
+            quotes = re.findall(r"'([^']*)'", req.query)
+        
+        wa_text = quotes[0] if quotes else None
+        if not wa_text:
+            match = re.search(r'(?:saying|texting|message|content|with)\s+(.+)$', req.query, re.IGNORECASE)
+            if match:
+                wa_text = match.group(1).strip()
+                wa_text = re.sub(r'^["\'\s]+|["\'\s]+$', '', wa_text)
+                
+        if not wa_text:
+            wa_text = f"Hi {target_name}! Just checking in to see if you have any questions about EduFlow. We'd love to help you get started! 🚀"
+            
+        whatsapp_service.send_custom_message(
+            phone=target_phone,
+            name=target_name,
+            message=wa_text
+        )
+        return {
+            "response": f"📲 **Action Triggered**: Sent WhatsApp message to **{target_name}** (+91 {target_phone}):\n\n*\"{wa_text}\"*"
+        }
 
     if any(w in q_lower for w in ["hot lead", "leads", "hottest"]):
         lead_list = "\n".join([f"- **{h['name']}** (+91 {h['phone']}) - interested in *{h.get('course_interest', 'AI/ML') }* ({h.get('message_count', 0)} messages)" for h in hot_leads])

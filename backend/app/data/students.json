@@ -60,19 +60,20 @@
       "enrolled_course": "ai-ml-bootcamp",
       "enrolled_batch": "batch-ai-jun",
       "enrolled_at": "2026-06-01T20:29:18",
-      "message_count": 9,
+      "message_count": 13,
       "sentiment_history": [
         "positive",
-        "positive",
-        "positive",
-        "positive",
         "neutral",
         "neutral",
         "positive",
         "positive",
+        "positive",
+        "positive",
+        "positive",
+        "neutral",
         "positive"
       ],
-      "last_active": "2026-06-02T00:30:36",
+      "last_active": "2026-06-02T21:30:53",
       "frustrated_count": 0
     }
   ]

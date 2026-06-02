@@ -14,7 +14,7 @@ from datetime import datetime
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
-from app.services import twilio_service
+from app.services import whatsapp_service
 
 logger = logging.getLogger(__name__)
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -59,7 +59,7 @@ async def _send_demo_reminders():
                 "exam": "Topics covered: Modules 1-4. Open-book quiz.",
                 "fee": "Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay",
             }
-            twilio_service.send_reminder(
+            whatsapp_service.send_reminder(
                 phone=student["phone"],
                 name=student["name"],
                 reminder_type=reminder_type,

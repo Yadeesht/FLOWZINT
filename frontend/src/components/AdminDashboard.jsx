@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
-// ── Mini Components ────────────────────────────────────────────────────────
+// === Mini Components ===
 
 function StatCard({ icon, label, value, sub, color = '#4F46E5', delta }) {
   return (
@@ -118,7 +118,7 @@ function WALogEntry({ entry }) {
   const statusColor = { delivered: '#059669', simulated: '#B45309', failed: '#BE123C' }
   const ts = entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''
   return (
-    <div style={{ padding: '14px 16px', background: '#FAFAFA', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 12 }}>
+    <div style={{ padding: '14px 16px', background: '#FAFAFA', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 16 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
         <span style={{ fontSize: 15 }}>{icons[entry.type] || '📨'}</span>
         <span style={{ fontSize: 11, fontWeight: 700, color: '#4A5568', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
@@ -208,11 +208,11 @@ function PipelineTable({ rows, showNudge, onNudge, nudgeStatus }) {
                       onClick={() => onNudge(s)}
                       disabled={nudging === 'loading'}
                       style={{
-                        padding: '6px 12px', borderRadius: 8, border: '1px solid #FDE68A',
+                        padding: '6px 12px', borderRadius: 12, border: '1px solid #FDE68A',
                         background: nudging === 'sent' ? '#ECFDF5' : '#FFFBEB',
                         color: nudging === 'sent' ? '#059669' : '#B45309',
                         fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                        fontFamily: 'inherit', transition: 'all 0.15s ease',
+                        fontFamily: 'inherit', transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                       }}
                     >
                       {nudging === 'loading' ? '⏳ Sending…' : nudging === 'sent' ? '✓ Sent!' : '📲 Nudge'}
@@ -228,7 +228,7 @@ function PipelineTable({ rows, showNudge, onNudge, nudgeStatus }) {
   )
 }
 
-// ── Main Dashboard ─────────────────────────────────────────────────────────
+// === Main Dashboard ===
 
 const NAV = [
   { id: 'overview', label: 'Overview', icon: '◈' },
@@ -319,7 +319,7 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ display: 'flex', height: '100vh', background: '#F8F9FB', overflow: 'hidden' }}>
-      {/* ── Sidebar ───────────────────────────────────────────────────── */}
+      {/* === Sidebar === */}
       <aside style={s.sidebar}>
         {/* Logo */}
         <div style={s.sidebarTop}>
@@ -373,7 +373,7 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      {/* ── Main Content ──────────────────────────────────────────────── */}
+      {/* === Main Content === */}
       <main style={s.main}>
         {/* Page header */}
         <div style={s.pageHeader}>
@@ -406,65 +406,213 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* ── Overview ────────────────────────────────────────────────── */}
+        {/* === Overview === */}
         {tab === 'overview' && (
-          <div style={s.content}>
-            {/* Stat cards */}
-            <div style={s.statsGrid}>
-              <StatCard icon="👥" label="Total Sessions" value={analytics?.total_sessions ?? 0} delta={12} color="#6366F1" />
-              <StatCard icon="🔍" label="Enquirers" value={analytics?.total_enquirers ?? 0} sub="OTP verified" color="#8B5CF6" />
-              <StatCard icon="✅" label="Enrolled" value={analytics?.total_enrolled ?? 0} delta={analytics?.total_enrolled > 0 ? Math.round(analytics.total_enrolled / Math.max(analytics.total_enquirers, 1) * 100) : 0} color="#10B981" />
-              <StatCard icon="📈" label="Conversion" value={`${analytics?.conversion_rate ?? 0}%`} sub="Enquiry → Enrollment" color="#F59E0B" />
-              <StatCard icon="📲" label="WA Sent" value={analytics?.wa_outbound_log?.length ?? 0} sub="Outbound total" color="#06B6D4" />
-              <StatCard icon="⭐" label="Avg Rating" value={avgRating} sub={`${reviews.length} reviews`} color="#F59E0B" />
-            </div>
+          <div style={{ ...s.content, display: 'flex', flexDirection: 'row', gap: 24, alignItems: 'stretch', width: '100%' }}>
+            {/* Left Column - Stats & Metrics (covers 50%) */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24, minWidth: 0, width: '50%' }}>
+              {/* Stat cards inside left column */}
+              <div style={s.statsGrid}>
+                <StatCard icon="👥" label="Total Sessions" value={analytics?.total_sessions ?? 0} delta={12} color="#6366F1" />
+                <StatCard icon="🔍" label="Enquirers" value={analytics?.total_enquirers ?? 0} sub="OTP verified" color="#8B5CF6" />
+                <StatCard icon="✅" label="Enrolled" value={analytics?.total_enrolled ?? 0} delta={analytics?.total_enrolled > 0 ? Math.round(analytics.total_enrolled / Math.max(analytics.total_enquirers, 1) * 100) : 0} color="#10B981" />
+                <StatCard icon="📈" label="Conversion" value={`${analytics?.conversion_rate ?? 0}%`} sub="Enquiry → Enrollment" color="#F59E0B" />
+              </div>
 
-            {/* Sentiment + WA preview */}
-            <div style={s.twoCol}>
               {/* Sentiment chart */}
-              <div className="card" style={{ padding: '24px' }}>
+              <div className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', borderRadius: 24, border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 8px 30px rgba(0,0,0,0.04)' }}>
                 <div style={s.sectionLabel}>Sentiment Breakdown</div>
                 {analytics?.sentiment_breakdown && (
                   <SentimentDonut data={analytics.sentiment_breakdown} />
                 )}
               </div>
 
-              {/* Recent WA log */}
-              <div className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+              {/* Secondary stats cards side-by-side */}
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                <div className="card" style={{ flex: 1, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16, borderRadius: 24, border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', minWidth: 160, transition: 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)' }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'none'}
+                >
+                  <div style={{ width: 40, height: 40, borderRadius: 12, background: '#06B6D414', border: '1px solid #06B6D422', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>📲</div>
+                  <div>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: '#0A0A0F', letterSpacing: '-0.03em', lineHeight: 1 }}>{analytics?.wa_outbound_log?.length ?? 0}</div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: '#4A5568', marginTop: 4 }}>WA Sent</div>
+                  </div>
+                </div>
+                <div className="card" style={{ flex: 1, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16, borderRadius: 24, border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', minWidth: 160, transition: 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)' }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'none'}
+                >
+                  <div style={{ width: 40, height: 40, borderRadius: 12, background: '#F59E0B14', border: '1px solid #F59E0B22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>⭐</div>
+                  <div>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: '#0A0A0F', letterSpacing: '-0.03em', lineHeight: 1 }}>{avgRating}</div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: '#4A5568', marginTop: 4 }}>Avg Rating</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hot leads preview */}
+              <div className="card" style={{ padding: '24px', borderRadius: 24, border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 8px 30px rgba(0,0,0,0.04)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <div style={s.sectionLabel}>Recent WA Messages</div>
-                  <button className="btn btn-ghost" style={{ fontSize: 12, padding: '5px 10px' }} onClick={() => setTab('wa_log')}>
+                  <div>
+                    <div style={s.sectionLabel}>Hot Leads</div>
+                    <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>Unenrolled leads</div>
+                  </div>
+                  <button className="btn btn-ghost" style={{ fontSize: 12, padding: '5px 10px' }} onClick={() => { setTab('pipeline'); setPipelineTab('hot') }}>
                     View all →
                   </button>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, overflow: 'hidden' }}>
-                  {(analytics?.wa_outbound_log || []).slice(0, 3).map(e => (
-                    <WALogEntry key={e.id} entry={e} />
-                  ))}
-                  {(!analytics?.wa_outbound_log || analytics.wa_outbound_log.length === 0) && (
-                    <p style={{ color: '#94A3B8', fontSize: 13 }}>No messages yet.</p>
-                  )}
-                </div>
+                <PipelineTable rows={students.hot_leads.slice(0, 3)} showNudge onNudge={nudge} nudgeStatus={nudgeStatus} />
               </div>
             </div>
 
-            {/* Hot leads preview */}
-            <div className="card" style={{ padding: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                <div>
-                  <div style={s.sectionLabel}>Hot Leads</div>
-                  <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>Unenrolled students with high engagement</div>
-                </div>
-                <button className="btn btn-ghost" style={{ fontSize: 12, padding: '5px 10px' }} onClick={() => { setTab('pipeline'); setPipelineTab('hot') }}>
-                  View all →
-                </button>
-              </div>
-              <PipelineTable rows={students.hot_leads.slice(0, 5)} showNudge onNudge={nudge} nudgeStatus={nudgeStatus} />
-            </div>
-          </div>
-        )}
+            {/* Right Column - Admin AI Copilot (covers 50%) */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, width: '50%', maxHeight: 720 }}>
+                <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden', background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 24, boxShadow: '0 8px 30px rgba(0,0,0,0.04)', height: '100%' }}>
+                  {/* Copilot Header */}
+                  <div style={{ padding: '18px 24px', borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'linear-gradient(135deg, #F8F9FB 0%, #FFFFFF 100%)', display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      width: 32, height: 32, borderRadius: 10,
+                      background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
+                      border: '1px solid #C7D2FE',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14
+                    }}>
+                      🤖
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: 14, color: '#0A0A0F' }}>Admin AI Copilot</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 2 }}>
+                        <span className="status-dot" style={{ width: 6, height: 6 }} />
+                        <span style={{ fontSize: 11, color: '#10B981', fontWeight: 600 }}>Active · Business Intelligence</span>
+                      </div>
+                    </div>
+                  </div>
 
-        {/* ── Pipeline ────────────────────────────────────────────────── */}
+                  {/* Chat messages */}
+                  <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16 }} className="scroll-area">
+                    {copilotMessages.map((m, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                        {m.role === 'assistant' && (
+                          <div style={{
+                            width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                            background: '#EEF2FF', border: '1px solid #C7D2FE',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12
+                          }}>
+                            🤖
+                          </div>
+                        )}
+                        <div style={{
+                          maxWidth: '82%',
+                          background: m.role === 'user' ? 'linear-gradient(135deg, #4F46E5, #6366F1)' : '#F8F9FB',
+                          color: m.role === 'user' ? '#FFFFFF' : '#1E1E2E',
+                          borderRadius: m.role === 'user' ? '16px 16px 0 16px' : '0 16px 16px 16px',
+                          padding: '11px 16px',
+                          border: m.role === 'user' ? 'none' : '1px solid rgba(0,0,0,0.04)',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                          fontSize: 13,
+                          lineHeight: 1.6
+                        }}>
+                          <div style={{ whiteSpace: 'pre-line' }}>
+                            {m.content}
+                          </div>
+                        </div>
+                        {m.role === 'user' && (
+                          <div style={{
+                            width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                            background: '#EEF2FF', border: '1px solid #C7D2FE',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#4F46E5'
+                          }}>
+                            AD
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {copilotTyping && (
+                      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                        <div style={{
+                          width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                          background: '#EEF2FF', border: '1px solid #C7D2FE',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12
+                        }}>
+                          🤖
+                        </div>
+                        <div style={{ background: '#F8F9FB', border: '1px solid rgba(0,0,0,0.04)', borderRadius: '0 12px 12px 12px', padding: '11px 16px', maxWidth: 64 }}>
+                          <div style={{ display: 'flex', gap: 3, alignItems: 'center', height: 8 }}>
+                            <span className="dot-typing" style={{ width: 4, height: 4 }} />
+                            <span className="dot-typing" style={{ width: 4, height: 4 }} />
+                            <span className="dot-typing" style={{ width: 4, height: 4 }} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Suggestions bar */}
+                  <div style={{ padding: '12px 20px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 6, flexWrap: 'wrap', background: '#FAFAFA' }}>
+                    {[
+                      { emoji: '🔥', label: 'Hottest Leads', text: 'Who is our hottest lead right now?' },
+                      { emoji: '📈', label: 'Conversion', text: 'Show me our active conversion rate' },
+                      { emoji: '⭐', label: 'Reviews', text: 'Summary of course ratings & reviews' },
+                      { emoji: '📅', label: 'Batches', text: 'Status of upcoming batches' }
+                    ].map(chip => (
+                      <button
+                        key={chip.text}
+                        className="chip"
+                        onClick={() => sendCopilotQuery(chip.text)}
+                        disabled={copilotTyping}
+                        style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', padding: '5px 10px', fontSize: 11.5 }}
+                      >
+                        <span>{chip.emoji}</span> {chip.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Input bar */}
+                  <div style={{ padding: '14px 20px 18px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 8 }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      background: '#F8F9FB',
+                      border: '1px solid rgba(0,0,0,0.08)',
+                      borderRadius: 14,
+                      padding: '4px 6px 4px 12px',
+                      flex: 1,
+                      transition: 'all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                      boxShadow: '0 2px 12px rgba(0,0,0,0.03)',
+                    }}>
+                      <input
+                        className="input"
+                        style={{ border: 'none', outline: 'none', flex: 1, padding: '8px 12px', background: 'transparent', fontSize: 13.5 }}
+                        placeholder="Ask Admin Copilot..."
+                        value={copilotInput}
+                        onChange={e => setCopilotInput(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendCopilotQuery()}
+                        disabled={copilotTyping}
+                      />
+                      <button
+                        onClick={() => sendCopilotQuery()}
+                        disabled={!copilotInput.trim() || copilotTyping}
+                        style={{
+                          width: 34, height: 34, borderRadius: 10, border: 'none',
+                          background: copilotInput.trim() && !copilotTyping ? '#4F46E5' : '#E2E8F0',
+                          color: copilotInput.trim() && !copilotTyping ? '#fff' : '#94A3B8',
+                          cursor: copilotInput.trim() && !copilotTyping ? 'pointer' : 'default',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, flexShrink: 0,
+                          transition: 'all 0.2s ease',
+                          boxShadow: copilotInput.trim() && !copilotTyping ? '0 4px 10px rgba(79,70,229,0.25)' : 'none'
+                        }}
+                      >
+                        {copilotTyping ? '⏳' : '↑'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+        {/* === Pipeline === */}
         {tab === 'pipeline' && (
           <div style={s.content}>
             <div className="card" style={{ padding: '24px' }}>
@@ -499,7 +647,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ── WA Log ──────────────────────────────────────────────────── */}
+        {/* === WA Log === */}
         {tab === 'wa_log' && (
           <div style={s.content}>
             <div className="card" style={{ padding: '24px' }}>
@@ -528,7 +676,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ── Reviews ─────────────────────────────────────────────────── */}
+        {/* === Reviews === */}
         {tab === 'reviews' && (
           <div style={s.content}>
             {/* Summary bar */}
@@ -566,124 +714,6 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
-
-        {/* ── Admin Copilot ────────────────────────────────────────────── */}
-        {tab === 'copilot' && (
-          <div style={{ ...s.content, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', height: 'calc(100vh - 120px)' }}>
-            <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0, background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.06)' }}>
-              {/* Chat messages */}
-              <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 16 }} className="scroll-area">
-                {copilotMessages.map((m, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
-                    {m.role === 'assistant' && (
-                      <div style={{
-                        width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                        background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
-                        border: '1px solid #C7D2FE',
-                        display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', fontSize: 14
-                      }}>
-                        🤖
-                      </div>
-                    )}
-                    <div style={{
-                      maxWidth: '80%',
-                      background: m.role === 'user' ? '#4F46E5' : '#FAFAFA',
-                      color: m.role === 'user' ? '#FFFFFF' : '#1E1E2E',
-                      borderRadius: m.role === 'user' ? '16px 16px 0 16px' : '0 16px 16px 16px',
-                      padding: '12px 16px',
-                      border: m.role === 'user' ? 'none' : '1px solid rgba(0,0,0,0.06)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
-                      fontSize: 13.5,
-                      lineHeight: 1.6
-                    }}>
-                      <div style={{ whiteSpace: 'pre-line' }}>
-                        {m.content}
-                      </div>
-                    </div>
-                    {m.role === 'user' && (
-                      <div style={{
-                        width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                        background: '#EEF2FF', border: '1px solid #C7D2FE',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#4F46E5'
-                      }}>
-                        AD
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {copilotTyping && (
-                  <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                    <div style={{
-                      width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                      background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
-                      border: '1px solid #C7D2FE',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14
-                    }}>
-                      🤖
-                    </div>
-                    <div style={{ background: '#FAFAFA', border: '1px solid rgba(0,0,0,0.06)', borderRadius: '0 16px 16px 16px', padding: '14px 18px', maxWidth: 80 }}>
-                      <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 12 }}>
-                        <span className="dot-typing" />
-                        <span className="dot-typing" />
-                        <span className="dot-typing" />
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Quick suggestions chips */}
-              <div style={{ padding: '12px 20px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 8, flexWrap: 'wrap', background: '#FAFAFA' }}>
-                {[
-                  { emoji: '🔥', text: 'Who is our hottest lead right now?' },
-                  { emoji: '📈', text: 'Show me our active conversion rate' },
-                  { emoji: '⭐', text: 'Summary of course ratings & reviews' },
-                  { emoji: '📅', text: 'Status of upcoming batches' }
-                ].map(chip => (
-                  <button
-                    key={chip.text}
-                    className="chip"
-                    onClick={() => sendCopilotQuery(chip.text)}
-                    disabled={copilotTyping}
-                    style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer' }}
-                  >
-                    <span>{chip.emoji}</span> {chip.text}
-                  </button>
-                ))}
-              </div>
-
-              {/* Input section */}
-              <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 10 }}>
-                <div style={{ ...s.inputWrap, flex: 1 }}>
-                  <input
-                    className="input"
-                    style={{ border: 'none', outline: 'none', flex: 1, padding: '10px 14px', background: 'transparent', fontSize: 13.5 }}
-                    placeholder="Ask Admin Copilot about student pipeline, conversions, or reviews..."
-                    value={copilotInput}
-                    onChange={e => setCopilotInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendCopilotQuery()}
-                    disabled={copilotTyping}
-                  />
-                  <button
-                    onClick={() => sendCopilotQuery()}
-                    disabled={!copilotInput.trim() || copilotTyping}
-                    style={{
-                      width: 36, height: 36, borderRadius: 8, border: 'none',
-                      background: copilotInput.trim() && !copilotTyping ? '#4F46E5' : '#E2E8F0',
-                      color: copilotInput.trim() && !copilotTyping ? '#fff' : '#94A3B8',
-                      cursor: copilotInput.trim() && !copilotTyping ? 'pointer' : 'default',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0,
-                      transition: 'all 0.2s ease',
-                      boxShadow: copilotInput.trim() && !copilotTyping ? '0 4px 10px rgba(79,70,229,0.25)' : 'none'
-                    }}
-                  >
-                    {copilotTyping ? '⏳' : '↑'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   )
@@ -699,7 +729,7 @@ const s = {
     padding: '20px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)',
   },
   sidebarLogo: {
-    width: 32, height: 32, borderRadius: 9, flexShrink: 0,
+    width: 32, height: 32, borderRadius: 12, flexShrink: 0,
     background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
     border: '1px solid #C7D2FE',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -714,8 +744,8 @@ const s = {
   navItem: {
     display: 'flex', alignItems: 'center', gap: 9, width: '100%',
     padding: '9px 12px', border: 'none', cursor: 'pointer',
-    borderRadius: 9, fontFamily: 'inherit', fontSize: 13,
-    transition: 'all 0.12s ease', textAlign: 'left', marginBottom: 2,
+    borderRadius: 12, fontFamily: 'inherit', fontSize: 13,
+    transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)', textAlign: 'left', marginBottom: 2,
   },
   sidebarBottom: {
     padding: '12px 8px', borderTop: '1px solid rgba(0,0,0,0.06)',
@@ -723,16 +753,16 @@ const s = {
   },
   refreshBtn: {
     display: 'flex', alignItems: 'center', gap: 7,
-    padding: '9px 12px', borderRadius: 9, border: 'none',
+    padding: '9px 12px', borderRadius: 12, border: 'none',
     background: 'transparent', cursor: 'pointer', color: '#64748B',
     fontSize: 13, fontWeight: 500, fontFamily: 'inherit',
-    transition: 'all 0.12s ease', width: '100%', textAlign: 'left',
+    transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)', width: '100%', textAlign: 'left',
   },
   chatLink: {
     display: 'flex', alignItems: 'center', gap: 7,
-    padding: '9px 12px', borderRadius: 9, textDecoration: 'none',
+    padding: '9px 12px', borderRadius: 12, textDecoration: 'none',
     color: '#64748B', fontSize: 13, fontWeight: 500,
-    transition: 'all 0.12s ease',
+    transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   },
   main: {
     flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column',

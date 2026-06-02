@@ -9,7 +9,7 @@ and urgency timer to recover the abandoned enquiry.
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.services import twilio_service
+from app.services import whatsapp_service
 
 router = APIRouter()
 
@@ -39,7 +39,7 @@ async def trigger_abandoned_nudge(req: NudgeRequest):
     if not req.course_interest:
         raise HTTPException(status_code=400, detail="Course interest is required for the nudge.")
 
-    result = twilio_service.send_abandoned_nudge(
+    result = whatsapp_service.send_abandoned_nudge(
         phone=phone,
         name=req.name,
         course_interest=req.course_interest,

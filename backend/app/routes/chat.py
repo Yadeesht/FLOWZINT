@@ -204,3 +204,133 @@ def update_session_student(token: str, updates: dict):
     """Update student data in an active session."""
     if token in _sessions:
         _sessions[token]["student"].update(updates)
+
+
+# === WhatsApp Webhook Integration ===
+
+def _get_or_create_student_by_phone(phone: str, name: str = "WhatsApp Student") -> dict:
+    """Look up an existing student by phone or create a new verified record."""
+    students = _load_json("students.json")
+    verified = students.get("verified_students", [])
+
+    for s in verified:
+        if s["phone"] == phone:
+            return s
+
+    new_student = {
+        "phone": phone,
+        "name": name,
+        "verified": True,
+        "course_interest": None,
+        "enrolled": False,
+        "enrolled_course": None,
+        "enrolled_batch": None,
+        "enrolled_at": None,
+        "message_count": 0,
+        "sentiment_history": [],
+        "last_active": datetime.now().isoformat(timespec="seconds"),
+        "frustrated_count": 0,
+    }
+    verified.append(new_student)
+    students["verified_students"] = verified
+    _save_json("students.json", students)
+    return new_student
+
+
+from fastapi import Form, Response
+import os
+
+@router.post("/whatsapp/incoming")
+async def incoming_whatsapp(
+    From: str = Form(...),
+    Body: str = Form(...),
+    ProfileName: str = Form("WhatsApp Student"),
+):
+    """
+    Handle incoming WhatsApp messages from Sandbox.
+    Routes the incoming text message to the core AI chatbot.
+    """
+    # Clean standard WhatsApp sender prefix (e.g., "whatsapp:+917010599822")
+    phone = From.replace("whatsapp:", "").replace("+91", "").strip()
+    if len(phone) > 10:
+        phone = phone[-10:]
+
+    # 1. Look for an active session matching this phone number
+    session_token = None
+    session = None
+    for token, sess in _sessions.items():
+        if sess.get("student", {}).get("phone") == phone:
+            session_token = token
+            session = sess
+            break
+
+    # 2. If no active session, look up/register student and open a new session
+    if not session:
+        student = _get_or_create_student_by_phone(phone, ProfileName)
+        session_token = create_session(student)
+        session = _sessions[session_token]
+
+    student = session["student"]
+    history = session["history"]
+
+    # 3. Detect interest updates from incoming text
+    detected_course = _detect_course_interest(Body)
+    if detected_course and not student.get("course_interest"):
+        student["course_interest"] = detected_course
+
+    # 4. Generate AI response using student context and chat history
+    response, sentiment = chat_with_llm(Body, history, student)
+
+    # 5. Handle sentiment tracking and support escalation
+    if sentiment == "frustrated":
+        student["frustrated_count"] = student.get("frustrated_count", 0) + 1
+
+    if student.get("frustrated_count", 0) >= 3:
+        response += (
+            "\n\n⚠️ I can see this hasn't been resolved to your satisfaction. "
+            "I've flagged your case for our support manager — you'll hear back within 2 hours."
+        )
+        student["frustrated_count"] = 0
+
+    # 6. Update conversational session history
+    history.append({"role": "user", "content": Body})
+    history.append({"role": "assistant", "content": response})
+    if len(history) > 20:
+        history = history[-20:]
+    session["history"] = history
+
+    # 7. Update student details
+    student["message_count"] = student.get("message_count", 0) + 1
+    student["last_active"] = datetime.now().isoformat(timespec="seconds")
+    if detected_course:
+        student["course_interest"] = detected_course
+    sentiment_history = student.get("sentiment_history", [])
+    sentiment_history.append(sentiment)
+    student["sentiment_history"] = sentiment_history[-10:]
+    session["student"] = student
+
+    # 8. Save persistent updates
+    _update_student_record(phone, {
+        "message_count": student["message_count"],
+        "last_active": student["last_active"],
+        "course_interest": student.get("course_interest"),
+        "sentiment_history": student["sentiment_history"],
+        "frustrated_count": student.get("frustrated_count", 0),
+    })
+
+    # 9. Update live analytics dashboard
+    _increment_analytics_sentiment(sentiment)
+
+    # 10. Dispatch response back to user via WhatsApp (or fallback log)
+    from app.services import whatsapp_service
+
+    # Log it immediately to analytics
+    whatsapp_service._log_to_analytics("bot_reply", f"+91 {phone[:5]} {phone[5:]}", student["name"], response)
+
+    if whatsapp_service._is_configured():
+        whatsapp_service._send_via_node_bot(phone, response, student["name"], "bot_reply")
+
+    # Return standard TwiML XML payload to complete the transaction
+    twiml_payload = """<?xml version="1.0" encoding="UTF-8"?>
+<Response></Response>"""
+    return Response(content=twiml_payload, media_type="application/xml")
