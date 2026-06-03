@@ -48,12 +48,13 @@ RULES:
 4. Keep responses concise (under 100 words) unless explaining a syllabus.
 5. After every response, output on a new line: SENTIMENT: [positive|neutral|frustrated|confused]
 6. If student seems frustrated (2+ complaints), offer human escalation.
-7. If student asks to enroll, confirm their preferred batch and say you will process enrollment.
+7. If student asks to enroll, confirm their preferred batch and enroll them using the 'enroll_in_batch' tool once they confirm they want to proceed.
 8. Never make up fees, dates, or data not in the provided context.
 9. Use emojis sparingly but warmly. 
 10. If a student asks about course details, always mention the specific fee and batch timing.
 11. You are fully capable of sending WhatsApp messages directly. Never say you cannot send WhatsApp messages. If a student asks you to send batch details, discount codes, confirmations, or information to their WhatsApp, or says "whatsapp me" / "send this to whatsapp", use the 'send_whatsapp_message' tool to send it to their phone number, and then confirm in your text reply that you have sent it.
 12. Proactively offer to send details to their WhatsApp when explaining batches, schedules, or enrolling (e.g. "Would you like me to send these batch details to your WhatsApp?").
+13. You can enroll students directly. If a student confirms they want to enroll, call the 'enroll_in_batch' tool to process their enrollment. Confirm in your text response that they are enrolled. Tell them that WhatsApp is a one-way notification/updates channel where they will receive their confirmation details, and that the enrollment is processed instantly right here in this chat (they do NOT need to reply on WhatsApp to confirm).
 
 TONE: Warm, clear, encouraging. Not corporate. Not robotic."""
 
@@ -189,6 +190,39 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
                 "I'm here to help you prepare. You can ask me about batch schedules, course instructors, placement assistance, or fee installments! 😊",
                 "positive"
             )
+
+    # ── Intent: confirm enrollment (yes/sure/y) ──────────────────────────────
+    if any(w in msg_lower for w in ["yes", "confirm", "sure", "ok", "y", "correct", "go ahead"]):
+        last_bot_msg = ""
+        for h in reversed(history):
+            if h.get("role") in ["assistant", "bot"]:
+                last_bot_msg = h.get("content", "").lower()
+                break
+        if "process your enrollment" in last_bot_msg or "lock in your spot" in last_bot_msg:
+            from app.services.enrollment import enroll_student_in_batch
+            interest = student.get("course_interest", "AI/ML Bootcamp")
+            course = next((c for c in courses if c["name"].lower() in interest.lower()), courses[0])
+            batch = next((b for b in batches if b["course_id"] == course["id"]), batches[0])
+            
+            res = enroll_student_in_batch(
+                phone=student.get("phone", ""),
+                batch_id=batch["id"],
+                student_session_dict=student
+            )
+            if res["success"]:
+                return (
+                    f"🎉 Congratulations, {name}! You have been successfully enrolled in **{course['name']}** (Batch: {batch['id']})! "
+                    f"I have processed your registration directly in the database. "
+                    f"We have sent your official schedule and joining details to your WhatsApp (+91 {student.get('phone')}). "
+                    f"Please note that WhatsApp is just a one-way notification channel where you'll receive updates — you're fully enrolled right now! 🚀",
+                    "positive"
+                )
+            else:
+                return (
+                    f"I tried to process your enrollment, but it failed: {res.get('error')}. "
+                    "You can also use the 'Enroll now' button in the header to pick a batch and complete it! 🛠️",
+                    "confused"
+                )
 
     # ── Intent: enroll ───────────────────────────────────────────────────────
     if any(w in msg_lower for w in ["enroll", "join", "register", "admission", "i want to"]):
@@ -414,6 +448,23 @@ def chat_with_llm(message: str, history: list, student: dict) -> tuple[str, str]
                             "required": ["phone", "message"]
                         }
                     }
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "enroll_in_batch",
+                        "description": "Enroll the student into a specific course batch. Use this when the student explicitly confirms they want to enroll and has chosen a batch.",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "batch_id": {
+                                    "type": "string",
+                                    "description": "The exact ID of the batch to enroll in (e.g., 'batch-ai-jun', 'batch-fs-jun')."
+                                }
+                            },
+                            "required": ["batch_id"]
+                        }
+                    }
                 }
             ]
 
@@ -463,6 +514,22 @@ def chat_with_llm(message: str, history: list, student: dict) -> tuple[str, str]
                             "role": "tool",
                             "name": "send_whatsapp_message",
                             "content": json.dumps({"status": "success", "message": "WhatsApp message sent successfully"})
+                        })
+                    elif tool_call.function.name == "enroll_in_batch":
+                        args = json.loads(tool_call.function.arguments)
+                        from app.services.enrollment import enroll_student_in_batch
+                        res = enroll_student_in_batch(
+                            phone=student.get("phone", ""),
+                            batch_id=args.get("batch_id"),
+                            student_session_dict=student
+                        )
+
+                        # Append tool response
+                        messages.append({
+                            "tool_call_id": tool_call.id,
+                            "role": "tool",
+                            "name": "enroll_in_batch",
+                            "content": json.dumps(res)
                         })
 
                 # Retrieve final text response from model
