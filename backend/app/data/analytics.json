@@ -11,6 +11,24 @@
   },
   "wa_outbound_log": [
     {
+      "id": "wa-bf4295",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "🔐 *EduFlow Security Verification*\n\nHey Yadeesh! Your EduFlow One-Time Password is:\n👉 *888018*\n\n⌛ This code is valid for *10 minutes*. Please do not share it with anyone. Let's get you set up! 🚀",
+      "timestamp": "2026-06-03T19:59:03",
+      "status": "delivered"
+    },
+    {
+      "id": "wa-b43ee9",
+      "type": "otp",
+      "to": "+91 70105 99822",
+      "name": "Yadeesh",
+      "message": "🔐 *EduFlow Security Verification*\n\nHey Yadeesh! Your EduFlow One-Time Password is:\n👉 *342730*\n\n⌛ This code is valid for *10 minutes*. Please do not share it with anyone. Let's get you set up! 🚀",
+      "timestamp": "2026-06-03T19:58:11",
+      "status": "delivered"
+    },
+    {
       "id": "wa-f9c0ee",
       "type": "reminder",
       "to": "+91 70105 99822",
@@ -441,24 +459,6 @@
       "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
       "timestamp": "2026-06-02T23:52:58",
       "status": "delivered"
-    },
-    {
-      "id": "wa-2dd7a3",
-      "type": "reminder",
-      "to": "+91 70105 99822",
-      "name": "Yadeesh",
-      "message": "💳 Hi Yadeesh! Friendly reminder — your fee instalment for *Ai Ml Bootcamp* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
-      "timestamp": "2026-06-02T23:42:38",
-      "status": "delivered"
-    },
-    {
-      "id": "wa-046e74",
-      "type": "reminder",
-      "to": "+91 91234 56789",
-      "name": "Priya",
-      "message": "💳 Hi Priya! Friendly reminder — your fee instalment for *Full Stack Web* is *due in 2 days*. Amount: ₹4,500 EMI instalment. Pay at https://eduflow.ai/pay Pay via the student portal to avoid any interruption.",
-      "timestamp": "2026-06-02T23:42:38",
-      "status": "delivered"
     }
   ],
   "hot_leads": [
@@ -472,5 +472,5 @@
       "last_active": "2026-05-30T18:00:00"
     }
   ],
-  "last_updated": "2026-06-03T13:33:20"
+  "last_updated": "2026-06-03T19:59:03"
 }
