@@ -27,11 +27,11 @@ if (process.platform === 'win32') {
         }
     }
 } else {
-    // Linux — prefer Google Chrome over Puppeteer's bundled Chromium
     const linuxPaths = [
         '/usr/bin/google-chrome-stable',
         '/usr/bin/google-chrome',
-        '/usr/bin/chromium-browser'
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium'
     ];
     for (const p of linuxPaths) {
         if (fs.existsSync(p)) {
@@ -47,7 +47,7 @@ if (executablePath) {
     console.log('[WhatsApp Bot] No local Chrome found — using Puppeteer bundled Chromium.');
 }
 
-// Clean up stale Chrome lock files (especially needed when transferring Chrome profiles between OS platforms like Windows and Linux)
+// Clean up stale Chrome lock files
 const sessionDir = path.join(__dirname, 'whatsapp_session', 'session');
 if (fs.existsSync(sessionDir)) {
     const lockFiles = ['SingletonLock', 'SingletonCookie', 'SingletonSocket'];
@@ -72,134 +72,158 @@ const client = new Client({
     puppeteer: {
         headless: true,
         executablePath: executablePath || undefined,
-        protocolTimeout: 0, // Disable Puppeteer protocol timeout to prevent Runtime.callFunctionOn timeouts on slow VM startup
+        protocolTimeout: 120000,  // 2 min — give slow VMs time to load WA Web
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-gpu',
+            '--disable-software-rasterizer',
+            '--disable-extensions',
+            '--disable-default-apps',
+            '--disable-background-networking',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-sync',
             '--disable-blink-features=AutomationControlled',
-            '--window-size=1920,1080'
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process',   // critical for Azure VMs
+            '--metrics-recording-only',
+            '--mute-audio',
+            '--hide-scrollbars',
+            '--window-size=1280,720',
+            '--ignore-certificate-errors',
+            '--allow-running-insecure-content',
         ]
     }
 });
 
-// Display QR Code or request Pairing Code
+// ── Event Handlers ──────────────────────────────────────────
+
+client.on('loading_screen', (percent, message) => {
+    console.log(`[WhatsApp Bot] Loading: ${percent}% — ${message}`);
+});
+
 client.on('qr', async (qr) => {
+    console.log('\n[WhatsApp Bot] QR received — generating...');
     const botPhone = process.env.BOT_PHONE;
+
     if (botPhone) {
         const cleanPhone = botPhone.replace(/\D/g, '');
-        console.log(`\n[WhatsApp Bot] Attempting to generate pairing code for phone: +${cleanPhone}...`);
+        console.log(`[WhatsApp Bot] Requesting pairing code for +${cleanPhone}...`);
         try {
             const pairingCode = await client.requestPairingCode(cleanPhone);
             console.log('\n======================================================');
-            console.log(`🔑 YOUR WHATSAPP PAIRING CODE:  ${pairingCode}`);
-            console.log('======================================================\n');
-            console.log('Instructions:');
-            console.log('1. Open WhatsApp on your phone.');
-            console.log('2. Go to Linked Devices -> Link a Device.');
-            console.log('3. Select "Link with phone number instead".');
-            console.log('4. Enter the code shown above.\n');
+            console.log(`🔑  PAIRING CODE:  ${pairingCode}`);
+            console.log('======================================================');
+            console.log('1. Open WhatsApp → Linked Devices → Link a Device');
+            console.log('2. Tap "Link with phone number instead"');
+            console.log('3. Enter the code above\n');
         } catch (err) {
-            console.error('[WhatsApp Bot] Pairing code generation failed. Falling back to QR code:', err);
-            console.log('\n--- SCAN THE QR CODE BELOW WITH WHATSAPP LINKED DEVICES ---');
+            console.error('[WhatsApp Bot] Pairing code failed, falling back to QR:', err.message);
             qrcode.generate(qr, { small: true });
         }
     } else {
-        console.log('\n--- SCAN THE QR CODE BELOW WITH WHATSAPP LINKED DEVICES ---');
+        console.log('\n--- SCAN THIS QR CODE IN WHATSAPP → LINKED DEVICES ---');
         qrcode.generate(qr, { small: true });
-        console.log('\n💡 Tip: To pair using a phone number instead of a QR code,');
-        console.log('run the bot with BOT_PHONE=91XXXXXXXXXX (your bot\'s phone number with country code).');
+        console.log('\n💡 Tip: Set BOT_PHONE=91XXXXXXXXXX to use pairing code instead.\n');
     }
-});
-
-client.on('ready', () => {
-    console.log('WhatsApp Bot successfully linked and running!');
 });
 
 client.on('authenticated', () => {
-    console.log('[WhatsApp Bot] Authenticated successfully!');
+    console.log('[WhatsApp Bot] ✅ Authenticated successfully!');
 });
 
 client.on('auth_failure', (msg) => {
-    console.error('[WhatsApp Bot] Authentication failure:', msg);
+    console.error('[WhatsApp Bot] ❌ Authentication failed:', msg);
+    console.error('[WhatsApp Bot] Deleting session and restarting in 5s...');
+    setTimeout(() => {
+        fs.rmSync('./whatsapp_session', { recursive: true, force: true });
+        client.initialize();
+    }, 5000);
+});
+
+client.on('ready', () => {
+    console.log('[WhatsApp Bot] ✅ Client is ready and connected!');
 });
 
 client.on('disconnected', (reason) => {
-    console.log('[WhatsApp Bot] Client was logged out / disconnected:', reason);
+    console.warn('[WhatsApp Bot] ⚠️  Disconnected:', reason);
+    console.log('[WhatsApp Bot] Attempting to reinitialize in 10s...');
+    setTimeout(() => {
+        client.initialize();
+    }, 10000);
 });
 
-client.on('loading_screen', (percent, message) => {
-    console.log(`[WhatsApp Bot] Loading screen: ${percent}% (${message})`);
-});
+// ── Incoming Message Handler ─────────────────────────────────
 
-// Listen for incoming WhatsApp messages and route them to our FastAPI backend chatbot
 client.on('message', async (msg) => {
-    // Only process private chats (ignore groups)
-    if (msg.from.endsWith('@c.us')) {
-        const rawPhone = msg.from.split('@')[0];
-        const senderFormatted = `whatsapp:+${rawPhone}`;
-        
-        try {
-            const contact = await msg.getContact();
-            const profileName = contact.pushname || 'WhatsApp Student';
-            
-            console.log(`[WhatsApp Incoming] Reply from ${profileName} (${rawPhone}): ${msg.body}`);
+    if (!msg.from.endsWith('@c.us')) return; // ignore groups
 
-            // Construct x-www-form-urlencoded payload expected by FastAPI webhook
-            const params = new URLSearchParams();
-            params.append('From', senderFormatted);
-            params.append('Body', msg.body);
-            params.append('ProfileName', profileName);
+    const rawPhone = msg.from.split('@')[0];
+    const senderFormatted = `whatsapp:+${rawPhone}`;
 
-            const response = await fetch(`${BACKEND_URL}/api/whatsapp/incoming`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: params
-            });
+    try {
+        const contact = await msg.getContact();
+        const profileName = contact.pushname || 'WhatsApp User';
 
-            if (!response.ok) {
-                console.error(`[Webhook Error] Failed to route to chatbot. Status: ${response.status}`);
-            }
-        } catch (err) {
-            console.error('[Webhook Dispatch Error]', err);
+        console.log(`[WhatsApp Incoming] ${profileName} (${rawPhone}): ${msg.body}`);
+
+        const params = new URLSearchParams();
+        params.append('From', senderFormatted);
+        params.append('Body', msg.body);
+        params.append('ProfileName', profileName);
+
+        const response = await fetch(`${BACKEND_URL}/api/whatsapp/incoming`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
+        });
+
+        if (!response.ok) {
+            console.error(`[Webhook Error] Status: ${response.status}`);
         }
+    } catch (err) {
+        console.error('[Webhook Dispatch Error]', err.message);
     }
 });
 
-// Outbound API Endpoint for FastAPI backend to send messages
+// ── Outbound API ─────────────────────────────────────────────
+
 app.post('/send', async (req, res) => {
     const { phone, message } = req.body;
 
     if (!phone || !message) {
-        return res.status(400).json({ error: 'Missing phone or message in payload' });
+        return res.status(400).json({ error: 'Missing phone or message' });
     }
 
     try {
-        // Clean phone number format for whatsapp-web.js (must end with @c.us)
-        let cleanPhone = phone.replace(/\D/g, ''); // strip non-digits
-        if (cleanPhone.length === 10) {
-            cleanPhone = `91${cleanPhone}`; // default to Indian country code
-        }
-        
+        let cleanPhone = phone.replace(/\D/g, '');
+        if (cleanPhone.length === 10) cleanPhone = `91${cleanPhone}`;
+
         const chatId = `${cleanPhone}@c.us`;
-        
-        console.log(`[WhatsApp Outbound] Sending message to ${chatId}...`);
+        console.log(`[WhatsApp Outbound] Sending to ${chatId}...`);
         await client.sendMessage(chatId, message);
-        
-        res.json({ success: true, message: `Message sent to ${cleanPhone}` });
+
+        res.json({ success: true, message: `Sent to ${cleanPhone}` });
     } catch (err) {
-        console.error('[WhatsApp Send Failure]', err);
-        res.status(500).json({ error: 'Failed to send WhatsApp message', details: err.message });
+        console.error('[WhatsApp Send Failure]', err.message);
+        res.status(500).json({ error: 'Failed to send message', details: err.message });
     }
 });
 
-// Start Express Server
+// ── Startup Watchdog ─────────────────────────────────────────
+
+setTimeout(() => {
+    console.warn('[WATCHDOG] ⚠️  90s passed with no QR or auth event.');
+    console.warn('[WATCHDOG] Check: ps aux | grep chrome && free -h');
+}, 90000);
+
+// ── Start ────────────────────────────────────────────────────
+
 app.listen(PORT, () => {
     console.log(`WhatsApp Gateway API listening on port ${PORT}`);
 });
 
-// Initialize client
 client.initialize();
