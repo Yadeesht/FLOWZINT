@@ -589,20 +589,29 @@ def _local_nudge_fallback(student: dict, history: list) -> tuple[bool, str]:
 
     if last_sentiment == "frustrated":
         message = (
-            f"Hey {name}, I noticed you had some difficulties or questions during our chat. "
-            "I want to make sure you get the best support possible. 💙 "
-            "Would you like me to connect you with our student support manager directly?"
+            f"💙 *EduFlow Support Team* 💙\n\n"
+            f"Hey {name}! We noticed you had some frustrations during our chat. "
+            f"We value your experience above all else and want to make things right immediately.\n\n"
+            f"💬 _Would you like me to connect you with our Senior Support Manager directly?_ "
+            f"Reply with *'yes'* and we'll flag this as a priority. Let's get it resolved! 🤝"
         )
     elif last_sentiment == "confused":
         message = (
-            f"Hi {name}! 👋 I'm here to clarify any doubts you have about our *{course_interest}*. "
-            "Are you unsure about the batch timings, syllabus, or fee structure? Let me know!"
+            f"👋 *Hey {name}! Quick Check-in* 🎓\n\n"
+            f"I'm here to clear up any confusion or doubts about our *{course_interest}* bootcamp! "
+            f"Whether it's batch timings, fees, installments, or the placement guarantee, no question is too small.\n\n"
+            f"💬 _Ask me anything right here!_ What's the main doubt holding you back? Let's talk! 😊"
         )
     else:
         message = (
-            f"Hey {name}! 👋 Still thinking about the *{course_interest}*? 🎓 "
-            "We have a couple of slots left in the upcoming batch. "
-            "Here's a 15% discount code *COMEBACK15* valid for 30 mins to lock in your spot! 🚀"
+            f"✨ *EduFlow Special Invitation* ✨\n\n"
+            f"Hey {name}! 👋 Still thinking about joining our *{course_interest}* bootcamp? "
+            f"We have just 2 slots left in the upcoming batch! ⏳\n\n"
+            f"⚡ *Exclusive Recovery Gift:*\n"
+            f"🎁 Enjoy *15% OFF* on your enrollment!\n"
+            f"🔑 Code: *COMEBACK15*\n\n"
+            f"💬 _\"The best way to predict the future is to create it.\"_ — Peter Drucker\n\n"
+            f"Reply here or jump back into the chat to lock in your spot! 🚀"
         )
 
     return True, message

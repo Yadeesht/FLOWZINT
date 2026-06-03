@@ -102,7 +102,13 @@ def _send_via_node_bot(phone: str, message: str, name: str, msg_type: str):
 
 def send_otp(phone: str, name: str, otp: str) -> dict:
     """Send OTP message via WhatsApp Node bot gateway."""
-    message = f"Your EduFlow OTP is *{otp}*. Valid for 10 minutes. Do not share this with anyone. 🔐"
+    message = (
+        f"🔐 *EduFlow Security Verification*\n\n"
+        f"Hey {name}! Your EduFlow One-Time Password is:\n"
+        f"👉 *{otp}*\n\n"
+        f"⌛ This code is valid for *10 minutes*. Please do not share it with anyone. "
+        f"Let's get you set up! 🚀"
+    )
     
     # Log it immediately to analytics
     to_display = f"+91 {phone[:5]} {phone[5:]}"
@@ -115,17 +121,21 @@ def send_otp(phone: str, name: str, otp: str) -> dict:
     return {"success": True, "simulated": True, "entry": entry}
 
 
-
 def send_abandoned_nudge(phone: str, name: str, course_interest: str, discount: int = 15, custom_message: str | None = None) -> dict:
     """Send the abandoned enquiry recovery nudge via WhatsApp Node bot gateway."""
     if custom_message:
         message = custom_message
     else:
         message = (
-            f"Hey {name}! 👋 Still thinking about the *{course_interest}*? "
-            f"🎓 Here's *{discount}% off* — valid for 30 mins only! ⚡ "
-            f"Only a few seats left. Reply here or come back to the chat to lock your spot. "
-            f"Use code *COMEBACK{discount}* at checkout!"
+            f"✨ *EduFlow Special Invitation* ✨\n\n"
+            f"Hey {name}! 👋 We noticed you were exploring our *{course_interest}* bootcamp. "
+            f"To help you take the leap, we've unlocked a special gift for you! 🎁\n\n"
+            f"⚡ *Exclusive Limited-Time Offer:*\n"
+            f"💥 Enjoy *{discount}% OFF* on your enrollment today!\n"
+            f"🔑 Use Coupon Code: *COMEBACK{discount}*\n\n"
+            f"💬 _\"The best investment you can make is in yourself.\"_ — Warren Buffett\n\n"
+            f"⏳ *Hurry, only a few seats left!* This code is valid for the next 30 minutes only. "
+            f"Reply to this message or return to the chat portal to claim your spot and launch your career! 🚀"
         )
     
     to_display = f"+91 {phone[:5]} {phone[5:]}"
@@ -141,14 +151,19 @@ def send_abandoned_nudge(phone: str, name: str, course_interest: str, discount: 
 def send_enrollment_confirmation(phone: str, name: str, course: dict, batch: dict) -> dict:
     """Send enrollment confirmation with batch details via WhatsApp Node bot gateway."""
     message = (
-        f"🎉 Congratulations {name}! You're officially enrolled in *{course['name']}*!\n\n"
-        f"📅 *Batch:* {batch['id']}\n"
-        f"🗓️ *Starts:* {batch['start_date']}\n"
-        f"⏰ *Time:* {batch['time']} | {batch['days']}\n"
+        f"🎉 *Welcome to the EduFlow Family, {name}!* 🎉\n\n"
+        f"Congratulations! Your spot is officially secured. We are absolutely thrilled to have you join us! 🎓\n\n"
+        f"📌 *Your Enrollment Details:*\n"
+        f"🎓 *Course:* {course['name']}\n"
+        f"📅 *Batch ID:* {batch['id']}\n"
+        f"🗓️ *Starts On:* {batch['start_date']}\n"
+        f"⏰ *Timing:* {batch['time']} ({batch['days']})\n"
         f"👨‍🏫 *Instructor:* {batch['instructor']}\n"
-        f"🖥️ *Mode:* {batch['mode'].title()}\n"
-        f"🔗 *Joining Link:* {batch['joining_link']}\n\n"
-        f"Welcome to the EduFlow family! See you on {batch['start_date']}. 🚀"
+        f"🖥️ *Mode:* {batch['mode'].title()}\n\n"
+        f"🔗 *Classroom Joining Link:*\n"
+        f"{batch['joining_link']}\n\n"
+        f"💬 _\"The secret of getting ahead is getting started.\"_ — Mark Twain\n\n"
+        f"An onboarding coordinator will reach out to you shortly. Prepare to build amazing things! See you in class! 🚀"
     )
     
     to_display = f"+91 {phone[:5]} {phone[5:]}"
@@ -164,10 +179,31 @@ def send_enrollment_confirmation(phone: str, name: str, course: dict, batch: dic
 def send_reminder(phone: str, name: str, reminder_type: str, course_name: str, details: str = "") -> dict:
     """Send a scheduled reminder (exam, fee, class) via WhatsApp Node bot gateway."""
     templates = {
-        "exam": f"📚 Hi {name}! Heads up — you have an *exam/quiz tomorrow* for *{course_name}*. {details} All the best! 💪",
-        "fee": f"💳 Hi {name}! Friendly reminder — your fee instalment for *{course_name}* is *due in 2 days*. {details} Pay via the student portal to avoid any interruption.",
-        "class": f"📅 Hi {name}! Your *{course_name}* class is *tomorrow*. {details} Don't forget to review the pre-class material! 🎓",
-        "reschedule": f"⚠️ Hi {name}! Important update — your *{course_name}* class has been *rescheduled*. {details} Sorry for the inconvenience!",
+        "exam": (
+            f"📚 *EduFlow Exam Alert: Ready to Shine!* 🌟\n\n"
+            f"Hi {name}! Friendly heads-up: you have an upcoming *exam/quiz tomorrow* for *{course_name}*.\n\n"
+            f"📝 *Details:* {details}\n\n"
+            f"💬 _\"Believe you can and you're halfway there.\"_ — Theodore Roosevelt\n\n"
+            f"Get a good night's rest and give it your best shot! We believe in you! 💪🔥"
+        ),
+        "fee": (
+            f"💳 *EduFlow Account Notice: Fee Instalment* 🔔\n\n"
+            f"Hi {name}! This is a friendly reminder that your next fee instalment for *{course_name}* is *due in 2 days*.\n\n"
+            f"💵 *Instalment Details:* {details}\n\n"
+            f"Secure your learning journey! Please complete the payment through your student portal to ensure uninterrupted access to live classes and recordings. Thank you! 💙"
+        ),
+        "class": (
+            f"📅 *EduFlow Class Alert: Pre-Class Check!* 🎓\n\n"
+            f"Hi {name}! Get ready: your next class for *{course_name}* is scheduled for *tomorrow*.\n\n"
+            f"💡 *Pre-class Details:* {details}\n\n"
+            f"Please make sure to review the pre-class materials and assignments so we can make the most of our live session. See you there! 🚀"
+        ),
+        "reschedule": (
+            f"⚠️ *EduFlow Class Update: Schedule Change* 🔄\n\n"
+            f"Hi {name}! Important update: your *{course_name}* class has been rescheduled.\n\n"
+            f"🗓️ *New Schedule:* {details}\n\n"
+            f"We sincerely apologize for any inconvenience caused. The recorded session will be uploaded to the portal as usual if you cannot make it live. Thank you for your flexibility! 🙏"
+        ),
     }
     message = templates.get(reminder_type, f"Hi {name}! EduFlow reminder: {details}")
     
@@ -184,11 +220,14 @@ def send_reminder(phone: str, name: str, reminder_type: str, course_name: str, d
 def send_review_request(phone: str, name: str, course_name: str) -> dict:
     """Send a post-course review request via WhatsApp Node bot gateway."""
     message = (
-        f"Hi {name}! 🌟 Congratulations on completing *{course_name}*!\n\n"
-        f"Your journey means the world to us. We'd love to hear your feedback — "
-        f"it takes just 2 minutes and helps future students make better decisions.\n\n"
-        f"Click here to leave your review: https://eduflow.ai/review?phone={phone}\n\n"
-        f"Thank you for being part of the EduFlow family! 🎓"
+        f"🌟 *Congratulations, {name}!* 🎓\n\n"
+        f"You have officially completed *{course_name}*! We are incredibly proud of your dedication and hard work. 🎉\n\n"
+        f"Your experience and journey mean the absolute world to us. Could you take 2 minutes to share your feedback? "
+        f"It helps future students make the right choice and helps us keep improving!\n\n"
+        f"👉 *Share your review here:*\n"
+        f"https://eduflow.ai/review?phone={phone}\n\n"
+        f"💬 _\"Education is the passport to the future.\"_ — Malcolm X\n\n"
+        f"Thank you for being a part of EduFlow, and all the best for your bright career ahead! 🚀"
     )
     
     to_display = f"+91 {phone[:5]} {phone[5:]}"
