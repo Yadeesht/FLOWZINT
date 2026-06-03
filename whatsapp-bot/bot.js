@@ -47,6 +47,23 @@ if (executablePath) {
     console.log('[WhatsApp Bot] No local Chrome found — using Puppeteer bundled Chromium.');
 }
 
+// Clean up stale Chrome lock files (especially needed when transferring Chrome profiles between OS platforms like Windows and Linux)
+const sessionDir = path.join(__dirname, 'whatsapp_session', 'session');
+if (fs.existsSync(sessionDir)) {
+    const lockFiles = ['SingletonLock', 'SingletonCookie', 'SingletonSocket'];
+    lockFiles.forEach(file => {
+        const filePath = path.join(sessionDir, file);
+        if (fs.existsSync(filePath)) {
+            try {
+                fs.unlinkSync(filePath);
+                console.log(`[WhatsApp Bot] Cleaned stale lock file: ${file}`);
+            } catch (err) {
+                console.warn(`[WhatsApp Bot] Could not clean lock file ${file}:`, err.message);
+            }
+        }
+    });
+}
+
 // Initialize WhatsApp Web Client
 const client = new Client({
     authStrategy: new LocalAuth({
@@ -55,6 +72,7 @@ const client = new Client({
     puppeteer: {
         headless: true,
         executablePath: executablePath || undefined,
+        protocolTimeout: 0, // Disable Puppeteer protocol timeout to prevent Runtime.callFunctionOn timeouts on slow VM startup
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
