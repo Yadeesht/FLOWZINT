@@ -124,7 +124,18 @@ def send_otp(phone: str, name: str, otp: str) -> dict:
 def send_abandoned_nudge(phone: str, name: str, course_interest: str, discount: int = 15, custom_message: str | None = None) -> dict:
     """Send the abandoned enquiry recovery nudge via WhatsApp Node bot gateway."""
     if custom_message:
-        message = custom_message
+        # If the custom message is a simple raw paragraph (lacks standard quote/spacing layout),
+        # wrap it in a beautiful, structured template ourselves.
+        custom_clean = custom_message.strip()
+        if "_" not in custom_clean and "—" not in custom_clean:
+            message = (
+                f"✨ *EduFlow Career Acceleration* ✨\n\n"
+                f"{custom_clean}\n\n"
+                f"💬 _\"The best way to predict the future is to create it.\"_ — Peter Drucker\n\n"
+                f"⚡ *Limited-Time Offer:* Reply here or return to the chat portal to claim your *{discount}% discount* and lock in your spot! 🚀"
+            )
+        else:
+            message = custom_clean
     else:
         message = (
             f"✨ *EduFlow Special Invitation* ✨\n\n"
