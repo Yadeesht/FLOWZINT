@@ -51,10 +51,33 @@ const client = new Client({
     }
 });
 
-// Display QR Code for pairing
-client.on('qr', (qr) => {
-    console.log('\n--- SCAN THE QR CODE BELOW WITH WHATSAPP LINKED DEVICES ---');
-    qrcode.generate(qr, { small: true });
+// Display QR Code or request Pairing Code
+client.on('qr', async (qr) => {
+    const botPhone = process.env.BOT_PHONE;
+    if (botPhone) {
+        const cleanPhone = botPhone.replace(/\D/g, '');
+        console.log(`\n[WhatsApp Bot] Attempting to generate pairing code for phone: +${cleanPhone}...`);
+        try {
+            const pairingCode = await client.requestPairingCode(cleanPhone);
+            console.log('\n======================================================');
+            console.log(`🔑 YOUR WHATSAPP PAIRING CODE:  ${pairingCode}`);
+            console.log('======================================================\n');
+            console.log('Instructions:');
+            console.log('1. Open WhatsApp on your phone.');
+            console.log('2. Go to Linked Devices -> Link a Device.');
+            console.log('3. Select "Link with phone number instead".');
+            console.log('4. Enter the code shown above.\n');
+        } catch (err) {
+            console.error('[WhatsApp Bot] Pairing code generation failed. Falling back to QR code:', err);
+            console.log('\n--- SCAN THE QR CODE BELOW WITH WHATSAPP LINKED DEVICES ---');
+            qrcode.generate(qr, { small: true });
+        }
+    } else {
+        console.log('\n--- SCAN THE QR CODE BELOW WITH WHATSAPP LINKED DEVICES ---');
+        qrcode.generate(qr, { small: true });
+        console.log('\n💡 Tip: To pair using a phone number instead of a QR code,');
+        console.log('run the bot with BOT_PHONE=91XXXXXXXXXX (your bot\'s phone number with country code).');
+    }
 });
 
 client.on('ready', () => {
