@@ -113,15 +113,32 @@ async def get_students():
         enrolled = [s for s in verified if s.get("enrolled")]
         investigated = [s for s in verified if not s.get("enrolled")]
 
-        # Hot leads: uninvested students with 3+ messages and mostly positive sentiment
+        # Hot leads: unenrolled students who are actively engaging (message_count >= 1)
+        # Prioritized by engagement level and immediate sentiment needs (confused/frustrated need immediate attention)
         hot_leads = []
         for s in investigated:
             msg_count = s.get("message_count", 0)
+            if msg_count < 1:
+                continue
+
             sentiments = s.get("sentiment_history", [])
-            positive_count = sum(1 for sent in sentiments if sent in ("positive", "neutral"))
-            if msg_count >= 2 and positive_count >= 1:
-                score = min(100, msg_count * 10 + positive_count * 15)
-                hot_leads.append({**s, "score": score})
+            last_sentiment = sentiments[-1] if sentiments else "neutral"
+
+            # Base score from message count engagement
+            score = min(50, msg_count * 10)
+
+            # Sentiment-based priority bump
+            if last_sentiment == "confused":
+                score += 40
+            elif last_sentiment == "frustrated":
+                score += 50
+            elif last_sentiment == "positive":
+                score += 30
+            else:  # neutral
+                score += 20
+
+            hot_leads.append({**s, "score": min(100, score)})
+
         hot_leads.sort(key=lambda x: x["score"], reverse=True)
 
         return {

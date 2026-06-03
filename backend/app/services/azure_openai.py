@@ -391,7 +391,7 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
         f"That's a great question, {name}! 😊 I want to make sure I give you the right answer. "
         "Could you tell me a bit more? For example — are you asking about a specific course, batch timing, fee, or something else? "
         "I'm here to help with anything EduFlow-related!",
-        "neutral",
+        "confused",
     )
 
 
