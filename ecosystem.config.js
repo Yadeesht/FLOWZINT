@@ -6,6 +6,7 @@ module.exports = {
       args: "app.main:app --host 127.0.0.1 --port 8000",
       cwd: "/home/azureuser/FLOWZINT/backend",
       instances: 1,
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
       env: {
@@ -18,6 +19,7 @@ module.exports = {
       args: "run start",
       cwd: "./frontend",
       instances: 1,
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
       env: {
@@ -30,6 +32,7 @@ module.exports = {
       script: "bot.js",
       cwd: "./whatsapp-bot",
       instances: 1,
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
       env: {
