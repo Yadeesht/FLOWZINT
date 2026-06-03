@@ -117,6 +117,22 @@ client.on('ready', () => {
     console.log('WhatsApp Bot successfully linked and running!');
 });
 
+client.on('authenticated', () => {
+    console.log('[WhatsApp Bot] Authenticated successfully!');
+});
+
+client.on('auth_failure', (msg) => {
+    console.error('[WhatsApp Bot] Authentication failure:', msg);
+});
+
+client.on('disconnected', (reason) => {
+    console.log('[WhatsApp Bot] Client was logged out / disconnected:', reason);
+});
+
+client.on('loading_screen', (percent, message) => {
+    console.log(`[WhatsApp Bot] Loading screen: ${percent}% (${message})`);
+});
+
 // Listen for incoming WhatsApp messages and route them to our FastAPI backend chatbot
 client.on('message', async (msg) => {
     // Only process private chats (ignore groups)
