@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-// Resolve local Chrome executable path on Windows to avoid Puppeteer download failures
+// Resolve local Chrome executable path (Windows + Linux)
 let executablePath = '';
 if (process.platform === 'win32') {
     const possiblePaths = [
@@ -26,18 +26,36 @@ if (process.platform === 'win32') {
             break;
         }
     }
-    if (executablePath) {
-        console.log(`[WhatsApp Bot] Found local Google Chrome at: ${executablePath}`);
-    } else {
-        console.log('[WhatsApp Bot] Warning: Local Google Chrome executable not found. Running default.');
+} else {
+    // Linux — prefer Google Chrome over Puppeteer's bundled Chromium
+    const linuxPaths = [
+        '/usr/bin/google-chrome-stable',
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium-browser'
+    ];
+    for (const p of linuxPaths) {
+        if (fs.existsSync(p)) {
+            executablePath = p;
+            break;
+        }
     }
+}
+
+if (executablePath) {
+    console.log(`[WhatsApp Bot] Using browser: ${executablePath}`);
+} else {
+    console.log('[WhatsApp Bot] No local Chrome found — using Puppeteer bundled Chromium.');
 }
 
 // Initialize WhatsApp Web Client
 const client = new Client({
     authStrategy: new LocalAuth({
-        dataPath: './whatsapp_session' // Persistent session directory
+        dataPath: './whatsapp_session'
     }),
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/nicfreelancing/nicfreelancing.github.io/main/nicWWJS/wppconnect-wa-version/main/html/2.3000.1019023134-alpha.html',
+    },
     puppeteer: {
         headless: true,
         executablePath: executablePath || undefined,
@@ -46,8 +64,8 @@ const client = new Client({
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-gpu',
-            '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-            '--disable-blink-features=AutomationControlled'
+            '--disable-blink-features=AutomationControlled',
+            '--window-size=1920,1080'
         ]
     }
 });
