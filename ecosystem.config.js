@@ -2,10 +2,9 @@ module.exports = {
   apps: [
     {
       name: "flowzint-backend",
-      script: "uvicorn",
+      script: "/home/azureuser/FLOWZINT/backend/.venv/bin/uvicorn",
       args: "app.main:app --host 127.0.0.1 --port 8000",
-      cwd: "./backend",
-      interpreter: "./backend/.venv/bin/python",
+      cwd: "/home/azureuser/FLOWZINT/backend",
       instances: 1,
       autorestart: true,
       watch: false,
