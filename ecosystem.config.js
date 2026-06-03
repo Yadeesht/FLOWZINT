@@ -7,6 +7,7 @@ module.exports = {
       cwd: "/home/azureuser/FLOWZINT/backend",
       instances: 1,
       exec_mode: "fork",
+      interpreter: "none",
       autorestart: true,
       watch: false,
       env: {
@@ -20,6 +21,7 @@ module.exports = {
       cwd: "./frontend",
       instances: 1,
       exec_mode: "fork",
+      interpreter: "none",
       autorestart: true,
       watch: false,
       env: {
