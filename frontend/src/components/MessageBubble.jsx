@@ -2,33 +2,176 @@
 
 import { useEffect, useRef } from 'react'
 
-// Inline markdown renderer
-function renderMd(text) {
-  if (!text) return null
-  return text.split('\n').map((line, i) => {
-    if (!line.trim()) return <div key={i} style={{ height: 5 }} />
-
-    const isBullet = line.startsWith('• ') || line.startsWith('- ')
-    const content = isBullet ? line.slice(2) : line
-
-    const rendered = content.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((part, j) => {
-      if (part.startsWith('**') && part.endsWith('**'))
-        return <strong key={j}>{part.slice(2, -2)}</strong>
-      if (part.startsWith('*') && part.endsWith('*'))
-        return <em key={j} style={{ color: '#4F46E5', fontStyle: 'normal', fontWeight: 600 }}>{part.slice(1, -1)}</em>
-      return part
-    })
-
-    if (isBullet) {
-      return (
-        <div key={i} className="md list-item">
-          <span className="md list-bullet">·</span>
-          <span>{rendered}</span>
-        </div>
-      )
+// Inline markdown inline parser (bold, italics, line breaks)
+function renderInline(content) {
+  if (!content) return '';
+  const parts = content.split(/(<br\s*\/?>|\*\*[^*]+\*\*|\*[^*]+\*)/gi);
+  return parts.map((part, j) => {
+    if (part.toLowerCase().startsWith('<br')) {
+      return <br key={j} />;
     }
-    return <div key={i} className="md">{rendered}</div>
-  })
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={j}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <em key={j} style={{ color: '#4F46E5', fontStyle: 'normal', fontWeight: 600 }}>{part.slice(1, -1)}</em>;
+    }
+    return part;
+  });
+}
+
+// Preprocessor to combine wrapped table rows
+function preprocessLines(lines) {
+  const result = [];
+  for (let i = 0; i < lines.length; i++) {
+    let current = lines[i];
+
+    // Check if the current line starts with '|' and merge with subsequent wrapped table lines
+    while (i + 1 < lines.length) {
+      const next = lines[i + 1];
+      const curTrim = current.trim();
+      const nextTrim = next.trim();
+
+      const currentStarts = curTrim.startsWith('|');
+      const currentEnds = curTrim.endsWith('|');
+      const nextStarts = nextTrim.startsWith('|');
+      const nextEnds = nextTrim.endsWith('|');
+      const nextHasPipe = nextTrim.includes('|');
+
+      let shouldMerge = false;
+      if (currentStarts) {
+        if (!currentEnds && nextHasPipe) {
+          shouldMerge = true;
+        } else if (!nextStarts && nextEnds) {
+          shouldMerge = true;
+        } else if (curTrim.includes('|-') && !nextStarts && nextTrim.includes('-|')) {
+          shouldMerge = true;
+        }
+      }
+
+      if (shouldMerge) {
+        // Join separator lines directly, others with space
+        if (curTrim.endsWith('-') && nextTrim.startsWith('-')) {
+          current = current + nextTrim;
+        } else {
+          if (current.endsWith(' ') || next.startsWith(' ')) {
+            current = current + next;
+          } else {
+            current = current + ' ' + next;
+          }
+        }
+        i++; // Consume the merged line
+      } else {
+        break;
+      }
+    }
+    result.push(current);
+  }
+  return result;
+}
+
+// Table block parser
+function parseTable(tableLines, blockKey) {
+  if (tableLines.length < 2) {
+    return tableLines.map((line, idx) => <div key={`${blockKey}-${idx}`} className="md">{line}</div>);
+  }
+
+  // Helper to split table row by | and clean up empty cells
+  const getCells = (rowLine) => {
+    let cells = rowLine.split('|').map(s => s.trim());
+    if (cells[0] === '') cells.shift();
+    if (cells[cells.length - 1] === '') cells.pop();
+    return cells;
+  };
+
+  const headers = getCells(tableLines[0]);
+  const isSeparator = /^[|\s:-]+$/.test(tableLines[1]);
+  const startIdx = isSeparator ? 2 : 1;
+  const rows = [];
+
+  for (let k = startIdx; k < tableLines.length; k++) {
+    const cells = getCells(tableLines[k]);
+    if (cells.length > 0) {
+      // Pad or truncate row cells to align with headers
+      while (cells.length < headers.length) {
+        cells.push('');
+      }
+      if (cells.length > headers.length) {
+        cells.length = headers.length;
+      }
+      rows.push(cells);
+    }
+  }
+
+  return (
+    <div key={blockKey} className="premium-table-container">
+      <table className="premium-table">
+        <thead>
+          <tr>
+            {headers.map((h, idx) => (
+              <th key={idx}>{renderInline(h)}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, rIdx) => (
+            <tr key={rIdx}>
+              {row.map((cell, cIdx) => (
+                <td key={cIdx}>{renderInline(cell)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// Main markdown parser (block-level parsing)
+function renderMd(text) {
+  if (!text) return null;
+  const lines = preprocessLines(text.split('\n'));
+  const elements = [];
+  let tableLines = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const isTableLine = line.trim().startsWith('|');
+
+    if (isTableLine) {
+      tableLines.push(line);
+    } else {
+      if (tableLines.length > 0) {
+        elements.push(parseTable(tableLines, elements.length));
+        tableLines = [];
+      }
+
+      if (!line.trim()) {
+        elements.push(<div key={elements.length} style={{ height: 6 }} />);
+      } else {
+        const isBullet = line.startsWith('• ') || line.startsWith('- ');
+        const content = isBullet ? line.slice(2) : line;
+        const rendered = renderInline(content);
+
+        if (isBullet) {
+          elements.push(
+            <div key={elements.length} className="md list-item" style={{ display: 'flex', gap: 6, alignItems: 'flex-start', margin: '4px 0' }}>
+              <span className="md list-bullet" style={{ color: '#4F46E5', fontWeight: 'bold' }}>·</span>
+              <span>{rendered}</span>
+            </div>
+          );
+        } else {
+          elements.push(<div key={elements.length} className="md" style={{ margin: '4px 0' }}>{rendered}</div>);
+        }
+      }
+    }
+  }
+
+  if (tableLines.length > 0) {
+    elements.push(parseTable(tableLines, elements.length));
+  }
+
+  return elements;
 }
 
 const SENTIMENT_META = {
