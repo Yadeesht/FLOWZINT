@@ -43,20 +43,22 @@ Enrolled Batch: {enrolled_batch}
 
 RULES:
 1. Always address the student by their first name ({student_name}).
-2. Be warm, friendly, and encouraging — like a helpful senior student.
+2. Be highly constructive, clear, and informative. Avoid generic filler text; give direct, structured answers with clear headings and markdown tables to help the student make decisions.
 3. Never say "I don't know" — if uncertain, offer to connect them with the team.
 4. Keep responses concise (under 100 words) unless explaining a syllabus.
 5. After every response, output on a new line: SENTIMENT: [positive|neutral|frustrated|confused]
 6. If student seems frustrated (2+ complaints), offer human escalation.
 7. If student asks to enroll, confirm their preferred batch and enroll them using the 'enroll_in_batch' tool once they confirm they want to proceed.
 8. Never make up fees, dates, or data not in the provided context.
-9. Use emojis sparingly but warmly. 
+9. Use emojis warmly and consistently to make the conversation visually engaging and friendly.
 10. If a student asks about course details, always mention the specific fee and batch timing.
 11. You are fully capable of sending WhatsApp messages directly. Never say you cannot send WhatsApp messages. If a student asks you to send batch details, discount codes, confirmations, or information to their WhatsApp, or says "whatsapp me" / "send this to whatsapp", use the 'send_whatsapp_message' tool to send it to their phone number, and then confirm in your text reply that you have sent it.
 12. Proactively offer to send details to their WhatsApp when explaining batches, schedules, or enrolling (e.g. "Would you like me to send these batch details to your WhatsApp?").
 13. You can enroll students directly. If a student confirms they want to enroll, call the 'enroll_in_batch' tool to process their enrollment. Confirm in your text response that they are enrolled. Tell them that WhatsApp is a one-way notification/updates channel where they will receive their confirmation details, and that the enrollment is processed instantly right here in this chat (they do NOT need to reply on WhatsApp to confirm).
+14. When listing multiple courses, comparing fees, or presenting multiple batch schedules, you MUST format the details as a clean, neatly-aligned markdown table (e.g. columns for Batch, Start Date, Timing, Mode, Seats Left). Use relevant emojis in table headers and cells to make the table look beautiful, professional, and easy to scan.
+15. If explaining a single course or batch, use a clean list with emojis next to each point.
 
-TONE: Warm, clear, encouraging. Not corporate. Not robotic."""
+TONE: Constructive, encouraging, warm, and highly structured. Not corporate. Not robotic."""
 
 
 def _load_json(filename: str) -> list | dict:
@@ -179,15 +181,22 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
         
         if any(w in msg_lower for w in ["not have that info", "not have info", "why do you ask", "i already enrolled", "am i not enrolled", "tracked", "dont have"]):
             return (
-                f"Oh, my apologies, {name}! I absolutely have that info. You are enrolled in the **{course_name}** under batch **{batch_id}** (starting {batch_start} at {batch_time}). "
-                "I must have overlooked it in our conversation history for a moment. All your enrollment data is perfectly tracked! 🚀",
+                f"Oh, my apologies, {name}! 🌟 I definitely have your details tracked:\n\n"
+                f"🎓 **Course:** {course_name}\n"
+                f"📌 **Batch:** {batch_id.replace('-', ' ').title()}\n"
+                f"🗓️ **Starts:** {batch_start}\n"
+                f"⏰ **Timing:** {batch_time} ({batch_obj['days'] if batch_obj else 'Mon, Wed, Fri'})\n\n"
+                "All your enrollment details are fully secured in our system! 🚀",
                 "positive",
             )
 
         if any(w in msg_lower for w in ["hi", "hello", "hey", "namaste", "good"]):
             return (
-                f"Hey {name}! 👋 Great to have you back! As an enrolled student in our **{course_name}** under batch **{batch_id}** (starts {batch_start} at {batch_time}), "
-                "I'm here to help you prepare. You can ask me about batch schedules, course instructors, placement assistance, or fee installments! 😊",
+                f"Hey {name}! 👋 Great to have you back!\n\n"
+                f"You are currently enrolled in **{course_name}**:\n"
+                f"🗓️ **Starts:** {batch_start}\n"
+                f"⏰ **Timing:** {batch_time} ({batch_obj['days'] if batch_obj else 'Mon, Wed, Fri'})\n\n"
+                "I'm here to help you prepare. You can ask me about batch schedules, course instructors, placement support, or fee installments! 😊",
                 "positive"
             )
 
@@ -243,12 +252,21 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
 
     # ── Intent: fee / price ──────────────────────────────────────────────────
     if any(w in msg_lower for w in ["fee", "cost", "price", "how much", "charges", "emi", "pay"]):
-        lines = [f"Here's our course fee breakdown, {name}:\n"]
+        table_rows = [
+            "| 🎓 Course Name | 💰 Total Fee | 💳 EMI Option |",
+            "| :--- | :--- | :--- |"
+        ]
         for c in courses:
-            emi_note = f" (EMI: ₹{c['emi_amount']:,}/mo)" if c["emi_available"] else " (No EMI)"
-            lines.append(f"• **{c['name']}**: ₹{c['fee']:,}{emi_note}")
-        lines.append("\nAll fees include live classes, recordings, certificate & doubt sessions. Want to know more about any specific course? 😊")
-        return "\n".join(lines), "positive"
+            emi_note = f"₹{c['emi_amount']:,}/mo" if c["emi_available"] else "Not Available"
+            table_rows.append(f"| **{c['name']}** | ₹{c['fee']:,} | {emi_note} |")
+            
+        table_text = "\n".join(table_rows)
+        return (
+            f"Here is our course fee breakdown, {name}: 💰\n\n"
+            f"{table_text}\n\n"
+            f"All fees include live interactive classes, lifetime access to recordings, verified ISO certificates, and 1-on-1 mentorship. Do you have a specific course in mind? 😊",
+            "positive"
+        )
 
     # ── Intent: batch / schedule / timing ───────────────────────────────────
     if any(w in msg_lower for w in ["batch", "timing", "schedule", "when", "start", "date", "time", "slot"]):
@@ -256,13 +274,22 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
         relevant = [b for b in batches if interest.lower() in b["course_id"].replace("-", " ")] if interest else batches[:3]
         if not relevant:
             relevant = batches[:3]
-        lines = [f"Here are the upcoming batches for you, {name}:\n"]
+        
+        table_rows = [
+            "| 📌 Batch ID | 🗓️ Start Date | ⏰ Timing & Days | 🚪 Seats | 💻 Mode |",
+            "| :--- | :--- | :--- | :--- | :--- |"
+        ]
         for b in relevant[:3]:
-            lines.append(
-                f"• **{b['id']}**: {b['start_date']} | {b['time']} | {b['days']}\n"
-                f"  Instructor: {b['instructor']} | Seats left: {b['seats_left']} | Mode: {b['mode']}"
-            )
-        return "\n".join(lines) + "\n\nWhich timing works best for you?", "positive"
+            clean_batch_name = b['id'].replace('-', ' ').title()
+            table_rows.append(f"| **{clean_batch_name}** | {b['start_date']} | {b['time']} <br> *({b['days']})* | {b['seats_left']} left | {b['mode'].title()} |")
+            
+        table_text = "\n".join(table_rows)
+        return (
+            f"Here are the upcoming batches for you, {name}: 🎓\n\n"
+            f"{table_text}\n\n"
+            f"Which timing works best for you? 😊",
+            "positive"
+        )
 
     # ── Intent: specific course mention ─────────────────────────────────────
     for course in courses:
