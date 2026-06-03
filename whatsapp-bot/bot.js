@@ -52,10 +52,6 @@ const client = new Client({
     authStrategy: new LocalAuth({
         dataPath: './whatsapp_session'
     }),
-    webVersionCache: {
-        type: 'remote',
-        remotePath: 'https://raw.githubusercontent.com/nicfreelancing/nicfreelancing.github.io/main/nicWWJS/wppconnect-wa-version/main/html/2.3000.1019023134-alpha.html',
-    },
     puppeteer: {
         headless: true,
         executablePath: executablePath || undefined,
