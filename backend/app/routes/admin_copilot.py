@@ -57,7 +57,7 @@ RULES:
 1. Answer the administrator's question precisely using the database numbers above.
 2. Be professional, analytical, and insightful. Highlight key business trends where relevant (e.g. drop-offs, popular courses, high conversion opportunities).
 3. If asked to summarize reviews, provide a brief synthesis of student sentiment.
-4. Keep responses clear and structured. Use headings, bullet lists, and bold text. Avoid using markdown tables completely.
+4. Keep responses clear and structured. Use headings (e.g. ### Course Name), bold category headers, and double newlines to separate sections. Use indented sub-bullets (using spaces before - or •) for details under categories to ensure a clean hierarchical layout. Avoid using markdown tables completely.
 5. You are fully capable of sending WhatsApp messages directly. Never say you cannot send WhatsApp messages. If the administrator asks you to nudge a student, send a message to a student, or text them details, use the 'send_whatsapp_message' tool to send it immediately.
 6. Proactively offer to send notifications, details, or reminders to students via WhatsApp (e.g. "Would you like me to send a WhatsApp nudge/reminder with these details to Arjun?").
 """
@@ -260,48 +260,64 @@ async def admin_copilot(req: CopilotRequest):
         }
 
     if any(w in q_lower for w in ["hot lead", "leads", "hottest"]):
-        lead_list = "\n".join([f"- **{h['name']}** (+91 {h['phone']}) - interested in *{h.get('course_interest', 'AI/ML') }* ({h.get('message_count', 0)} messages)" for h in hot_leads])
+        lead_list = "\n\n".join([
+            f"• 👤 **{h['name']}** (+91 {h['phone']}):\n"
+            f"  - Interest: *{h.get('course_interest', 'AI/ML Bootcamp')}*\n"
+            f"  - Engagement: **{h.get('message_count', 0)}** messages"
+            for h in hot_leads
+        ])
         return {
-            "response": f"Here is our **Hot Leads Pipeline** analysis:\n\n"
+            "response": f"### Hot Leads Pipeline Analysis\n\n"
                         f"We currently have **{len(hot_leads)} hot leads** actively interacting but not yet enrolled:\n\n"
                         f"{lead_list if hot_leads else 'No hot leads at the moment.'}\n\n"
-                        f"💡 *Recommendation*: You can nudge these students directly from the **Pipeline** panel with a 20% discount offer!"
+                        f"💡 **Recommendation**: You can nudge these students directly from the **Pipeline** panel with a 20% discount offer!"
         }
 
     if any(w in q_lower for w in ["enrolled", "enrollment", "conversion", "rate"]):
         rate = analytics.get("conversion_rate", 20.0)
         return {
-            "response": f"📊 **Enrollment & Conversion Summary**:\n\n"
-                        f"- **Total verified enquirers**: {len(verified)}\n"
-                        f"- **Total enrolled students**: {len(enrolled)}\n"
-                        f"- **Active Conversion Rate**: **{rate}%**\n\n"
+            "response": f"### Enrollment & Conversion Summary\n\n"
+                        f"• 👥 **Total verified enquirers**: {len(verified)}\n"
+                        f"• 🎓 **Total enrolled students**: {len(enrolled)}\n"
+                        f"• 📈 **Active Conversion Rate**: **{rate}%**\n\n"
                         f"Our primary driver remains the AI/ML Bootcamp. Conversion has increased since introducing the WhatsApp cart-abandonment nudges!"
         }
 
     if any(w in q_lower for w in ["review", "rating", "satisfaction", "stars"]):
+        reviews_formatted = "\n\n".join([
+            f'• 👤 **{r["student_name"]}** ({r["rating"]}★)\n'
+            f'  - Feedback: *"{r["comment"]}"*'
+            for r in reviews_list[:3]
+        ])
         return {
-            "response": f"⭐ **Student Satisfaction Analytics**:\n\n"
-                        f"- **Average Rating**: **{avg_rating} / 5.0** stars\n"
-                        f"- **Total Reviews Collected**: {len(reviews_list)}\n\n"
-                        f"**Recent Feedback Highlights**:\n"
-                        + "\n".join([f'- *"{r["comment"]}"* — **{r["student_name"]}** ({r["rating"]}★)' for r in reviews_list[:3]])
+            "response": f"### Student Satisfaction Analytics\n\n"
+                        f"• ⭐ **Average Rating**: **{avg_rating} / 5.0** stars\n"
+                        f"• 💬 **Total Reviews Collected**: {len(reviews_list)}\n\n"
+                        f"**Recent Feedback Highlights**:\n\n{reviews_formatted}"
         }
 
     if any(w in q_lower for w in ["batch", "timing", "slots", "instructor"]):
-        batch_list = "\n".join([f"- **{b['id']}** ({b['course_id']}): {b['seats_left']} seats left. Instructor: *{b['instructor']}*" for b in batches[:5]])
+        batch_list = "\n\n".join([
+            f"• 📅 **{b['id']}** ({b['course_id']}):\n"
+            f"  - Seats left: **{b['seats_left']}**\n"
+            f"  - Instructor: *{b['instructor']}*"
+            for b in batches[:5]
+        ])
         return {
-            "response": f"📅 **Batch Allocation Status**:\n\n"
+            "response": f"### Batch Allocation Status\n\n"
                         f"Here is a status check on our upcoming slots:\n\n{batch_list}\n\n"
-                        f"Full-stack and AI slots are filling up quickly (average 5-10 seats left per batch)!"
+                        f"💡 **Recommendation**: Full-stack and AI slots are filling up quickly (average 5-10 seats left per batch)!"
         }
 
     return {
-        "response": f"Hello Administrator! I am your **Admin AI Copilot** 🤖. I have fully indexed our databases.\n\n"
-                    f"Here is a quick snapshot of the system state:\n"
-                    f"- **Active Sessions**: {analytics.get('total_sessions', 0)}\n"
-                    f"- **Verified Enquirers**: {len(verified)}\n"
-                    f"- **Successful Enrollments**: {len(enrolled)}\n"
-                    f"- **Conversion Rate**: {avg_rating}★ Rating | {analytics.get('conversion_rate', 0)}% Conversion\n\n"
+        "response": f"### Admin AI Copilot Console\n\n"
+                    f"Hello Administrator! I am your AI Copilot 🤖. I have fully indexed our databases.\n\n"
+                    f"**System Snapshot**:\n"
+                    f"• 👥 **Active Sessions**: {analytics.get('total_sessions', 0)}\n"
+                    f"• 🔍 **Verified Enquirers**: {len(verified)}\n"
+                    f"• ✅ **Successful Enrollments**: {len(enrolled)}\n"
+                    f"• 📈 **Conversion Rate**: **{analytics.get('conversion_rate', 0)}%**\n"
+                    f"• ⭐ **Average Rating**: **{avg_rating} / 5.0** stars\n\n"
                     f"You can ask me specific details, like:\n"
                     f"- *'Who is our hottest lead right now?'*\n"
                     f"- *'Show me our average ratings and recent feedback'*\n"

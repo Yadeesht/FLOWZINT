@@ -146,24 +146,77 @@ function renderMd(text) {
         tableLines = [];
       }
 
-      if (!line.trim()) {
-        elements.push(<div key={elements.length} style={{ height: 6 }} />);
-      } else {
-        const isBullet = line.startsWith('• ') || line.startsWith('- ');
-        const content = isBullet ? line.slice(2) : line;
+      const trimmed = line.trim();
+
+      // Empty line -> render vertical space
+      if (!trimmed) {
+        elements.push(<div key={elements.length} style={{ height: 10 }} />);
+        continue;
+      }
+
+      // Check for headers: #, ##, ###
+      if (trimmed.startsWith('### ')) {
+        const content = trimmed.slice(4);
+        elements.push(
+          <h4 key={elements.length} style={{ fontSize: 13.5, fontWeight: 800, color: '#0A0A0F', margin: '14px 0 6px 0', letterSpacing: '-0.01em' }}>
+            {renderInline(content)}
+          </h4>
+        );
+        continue;
+      }
+      if (trimmed.startsWith('## ')) {
+        const content = trimmed.slice(3);
+        elements.push(
+          <h3 key={elements.length} style={{ fontSize: 15, fontWeight: 800, color: '#0A0A0F', margin: '18px 0 8px 0', letterSpacing: '-0.02em' }}>
+            {renderInline(content)}
+          </h3>
+        );
+        continue;
+      }
+      if (trimmed.startsWith('# ')) {
+        const content = trimmed.slice(2);
+        elements.push(
+          <h2 key={elements.length} style={{ fontSize: 17, fontWeight: 800, color: '#0A0A0F', margin: '22px 0 10px 0', letterSpacing: '-0.02em' }}>
+            {renderInline(content)}
+          </h2>
+        );
+        continue;
+      }
+
+      // Check for bullet lists (handles spaces, tabs, and different bullet chars: -, •, *)
+      const isBullet = trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ');
+      if (isBullet) {
+        const leadingSpaces = line.length - line.trimStart().length;
+        const indentLevel = Math.floor(leadingSpaces / 2);
+        const content = trimmed.slice(2);
         const rendered = renderInline(content);
 
-        if (isBullet) {
-          elements.push(
-            <div key={elements.length} className="md list-item" style={{ display: 'flex', gap: 6, alignItems: 'flex-start', margin: '4px 0' }}>
-              <span className="md list-bullet" style={{ color: '#4F46E5', fontWeight: 'bold' }}>·</span>
-              <span>{rendered}</span>
-            </div>
-          );
-        } else {
-          elements.push(<div key={elements.length} className="md" style={{ margin: '4px 0' }}>{rendered}</div>);
-        }
+        elements.push(
+          <div
+            key={elements.length}
+            className="md list-item"
+            style={{
+              display: 'flex',
+              gap: 8,
+              alignItems: 'flex-start',
+              margin: '6px 0',
+              paddingLeft: indentLevel * 16
+            }}
+          >
+            <span className="md list-bullet" style={{ color: '#4F46E5', fontWeight: 'bold', fontSize: 14, lineHeight: '1.2' }}>·</span>
+            <span style={{ fontSize: 13.5, color: '#2D3748', lineHeight: '1.55' }}>{rendered}</span>
+          </div>
+        );
+        continue;
       }
+
+      // Regular paragraph
+      const rendered = renderInline(line);
+      elements.push(
+        <div key={elements.length} className="md" style={{ margin: '8px 0', fontSize: 13.5, color: '#2D3748', lineHeight: '1.6' }}>
+          {rendered}
+        </div>
+      );
     }
   }
 
