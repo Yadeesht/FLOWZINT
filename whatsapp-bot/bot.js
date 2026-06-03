@@ -88,7 +88,6 @@ const client = new Client({
             '--disable-blink-features=AutomationControlled',
             '--no-first-run',
             '--no-zygote',
-            '--single-process',   // critical for Azure VMs
             '--metrics-recording-only',
             '--mute-audio',
             '--hide-scrollbars',
