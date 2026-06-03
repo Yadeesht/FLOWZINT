@@ -43,7 +43,7 @@ Enrolled Batch: {enrolled_batch}
 
 RULES:
 1. Always address the student by their first name ({student_name}).
-2. Be highly constructive, clear, and informative. Avoid generic filler text; give direct, structured answers with clear headings and markdown tables to help the student make decisions.
+2. Be highly constructive, clear, and informative. Avoid generic filler text; give direct, structured answers with clear headings, bold details, and bullet points. Never use markdown tables.
 3. Never say "I don't know" — if uncertain, offer to connect them with the team.
 4. Keep responses concise (under 100 words) unless explaining a syllabus.
 5. After every response, output on a new line: SENTIMENT: [positive|neutral|frustrated|confused]
@@ -55,7 +55,7 @@ RULES:
 11. You are fully capable of sending WhatsApp messages directly. Never say you cannot send WhatsApp messages. If a student asks you to send batch details, discount codes, confirmations, or information to their WhatsApp, or says "whatsapp me" / "send this to whatsapp", use the 'send_whatsapp_message' tool to send it to their phone number, and then confirm in your text reply that you have sent it.
 12. Proactively offer to send details to their WhatsApp when explaining batches, schedules, or enrolling (e.g. "Would you like me to send these batch details to your WhatsApp?").
 13. You can enroll students directly. If a student confirms they want to enroll, call the 'enroll_in_batch' tool to process their enrollment. Confirm in your text response that they are enrolled. Tell them that WhatsApp is a one-way notification/updates channel where they will receive their confirmation details, and that the enrollment is processed instantly right here in this chat (they do NOT need to reply on WhatsApp to confirm).
-14. When listing multiple courses, comparing fees, or presenting multiple batch schedules, you MUST format the details as a clean, neatly-aligned markdown table (e.g. columns for Batch, Start Date, Timing, Mode, Seats Left). Use relevant emojis in table headers and cells to make the table look beautiful, professional, and easy to scan.
+14. Never format course lists, fee structures, or batch schedules as tables. Instead, always present them as clean, pointwise bullet lists with relevant emojis next to each item and bold text for key details (like names, fees, dates, and timings) so that they are visually engaging, clean, and easy to read.
 15. If explaining a single course or batch, use a clean list with emojis next to each point.
 
 TONE: Constructive, encouraging, warm, and highly structured. Not corporate. Not robotic."""
@@ -252,18 +252,14 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
 
     # ── Intent: fee / price ──────────────────────────────────────────────────
     if any(w in msg_lower for w in ["fee", "cost", "price", "how much", "charges", "emi", "pay"]):
-        table_rows = [
-            "| 🎓 Course Name | 💰 Total Fee | 💳 EMI Option |",
-            "| :--- | :--- | :--- |"
-        ]
+        points = []
         for c in courses:
-            emi_note = f"₹{c['emi_amount']:,}/mo" if c["emi_available"] else "Not Available"
-            table_rows.append(f"| **{c['name']}** | ₹{c['fee']:,} | {emi_note} |")
-            
-        table_text = "\n".join(table_rows)
+            emi_note = f"(EMI: ₹{c['emi_amount']:,}/mo)" if c["emi_available"] else "(No EMI option)"
+            points.append(f"• 🎓 **{c['name']}**: Total fee of **₹{c['fee']:,}** {emi_note}")
+        points_text = "\n".join(points)
         return (
             f"Here is our course fee breakdown, {name}: 💰\n\n"
-            f"{table_text}\n\n"
+            f"{points_text}\n\n"
             f"All fees include live interactive classes, lifetime access to recordings, verified ISO certificates, and 1-on-1 mentorship. Do you have a specific course in mind? 😊",
             "positive"
         )
@@ -275,18 +271,20 @@ def _local_fallback(message: str, student: dict, history: list) -> tuple[str, st
         if not relevant:
             relevant = batches[:3]
         
-        table_rows = [
-            "| 📌 Batch ID | 🗓️ Start Date | ⏰ Timing & Days | 🚪 Seats | 💻 Mode |",
-            "| :--- | :--- | :--- | :--- | :--- |"
-        ]
+        points = []
         for b in relevant[:3]:
             clean_batch_name = b['id'].replace('-', ' ').title()
-            table_rows.append(f"| **{clean_batch_name}** | {b['start_date']} | {b['time']} <br> *({b['days']})* | {b['seats_left']} left | {b['mode'].title()} |")
-            
-        table_text = "\n".join(table_rows)
+            points.append(
+                f"• 📌 **{clean_batch_name}**:\n"
+                f"  🗓️ Starts: **{b['start_date']}**\n"
+                f"  ⏰ Time: **{b['time']}** ({b['days']})\n"
+                f"  🚪 Seats left: **{b['seats_left']}**\n"
+                f"  💻 Mode: **{b['mode'].title()}**"
+            )
+        points_text = "\n\n".join(points)
         return (
             f"Here are the upcoming batches for you, {name}: 🎓\n\n"
-            f"{table_text}\n\n"
+            f"{points_text}\n\n"
             f"Which timing works best for you? 😊",
             "positive"
         )
