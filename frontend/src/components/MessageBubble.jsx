@@ -127,6 +127,21 @@ function parseTable(tableLines, blockKey) {
   );
 }
 
+// Helper to automatically bold the title in lists (e.g. "AI/ML Bootcamp - ₹12,999" -> "**AI/ML Bootcamp** - ₹12,999")
+function autoBoldTitle(text) {
+  if (text.includes('**')) return text;
+  const splitters = [' - ', ' : ', ': '];
+  for (const s of splitters) {
+    const idx = text.indexOf(s);
+    if (idx > 0) {
+      const title = text.slice(0, idx);
+      const rest = text.slice(idx);
+      return `**${title}**${rest}`;
+    }
+  }
+  return text;
+}
+
 // Main markdown parser (block-level parsing)
 function renderMd(text) {
   if (!text) return null;
@@ -183,12 +198,19 @@ function renderMd(text) {
         continue;
       }
 
-      // Check for bullet lists (handles spaces, tabs, and different bullet chars: -, •, *)
+      // Check for bullet lists (handles standard prefix: -, •, *)
       const isBullet = trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ');
+
+      // Check for leading emoji list item (e.g. "🚀 AI/ML Bootcamp")
+      const emojiMatch = trimmed.match(/^([\u{1F300}-\u{1F9FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|\p{Emoji_Presentation})\s*/u);
+
       if (isBullet) {
         const leadingSpaces = line.length - line.trimStart().length;
         const indentLevel = Math.floor(leadingSpaces / 2);
-        const content = trimmed.slice(2);
+        let content = trimmed.slice(2);
+
+        // Auto-bold the list title
+        content = autoBoldTitle(content);
         const rendered = renderInline(content);
 
         elements.push(
@@ -199,12 +221,39 @@ function renderMd(text) {
               display: 'flex',
               gap: 8,
               alignItems: 'flex-start',
-              margin: '6px 0',
+              margin: '8px 0',
               paddingLeft: indentLevel * 16
             }}
           >
             <span className="md list-bullet" style={{ color: '#4F46E5', fontWeight: 'bold', fontSize: 14, lineHeight: '1.2' }}>·</span>
-            <span style={{ fontSize: 13.5, color: '#2D3748', lineHeight: '1.55' }}>{rendered}</span>
+            <span style={{ fontSize: 13.5, color: '#2D3748', lineHeight: '1.6' }}>{rendered}</span>
+          </div>
+        );
+        continue;
+      } else if (emojiMatch) {
+        const leadingSpaces = line.length - line.trimStart().length;
+        const indentLevel = Math.floor(leadingSpaces / 2);
+        const emoji = emojiMatch[1];
+        let content = trimmed.slice(emojiMatch[0].length);
+
+        // Auto-bold the list title
+        content = autoBoldTitle(content);
+        const rendered = renderInline(content);
+
+        elements.push(
+          <div
+            key={elements.length}
+            className="md list-item"
+            style={{
+              display: 'flex',
+              gap: 10,
+              alignItems: 'flex-start',
+              margin: '10px 0',
+              paddingLeft: indentLevel * 16
+            }}
+          >
+            <span style={{ fontSize: 15, lineHeight: '1.2', flexShrink: 0 }}>{emoji}</span>
+            <span style={{ fontSize: 13.5, color: '#2D3748', lineHeight: '1.6' }}>{rendered}</span>
           </div>
         );
         continue;
