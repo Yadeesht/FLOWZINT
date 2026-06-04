@@ -15,11 +15,36 @@ Built on Azure OpenAI · FastAPI · Next.js · WhatsApp Integration</p>
   <img src="https://img.shields.io/badge/Deployed_on-Azure_VM-0089D6?style=flat-square&logo=microsoftazure&logoColor=white"/>
 </p>
 
+</div>
+
 <br/>
 
-> 🌐 **Live App** → [http://98.70.51.30](http://98.70.51.30) &nbsp;|&nbsp; 📖 **API Docs** → [http://98.70.51.30/docs](http://98.70.51.30/docs)
+<div align="center">
+<table width="80%" style="border: 2px solid #6C63FF; border-radius: 12px; background: #0d1117;">
+<tr>
+<td align="center" width="50%" style="padding: 20px;">
 
+### 🌐 Live Application
+
+## **[→ http://98.70.51.30](http://98.70.51.30)**
+
+*Click to open the live deployed app*
+
+</td>
+<td align="center" width="50%" style="padding: 20px; border-left: 2px solid #6C63FF;">
+
+### 📖 API Documentation
+
+## **[→ http://98.70.51.30/docs](http://98.70.51.30/docs)**
+
+*Interactive Swagger UI for all endpoints*
+
+</td>
+</tr>
+</table>
 </div>
+
+<br/>
 
 ---
 
