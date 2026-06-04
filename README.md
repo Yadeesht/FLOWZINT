@@ -54,9 +54,8 @@ Built on Azure OpenAI · FastAPI · Next.js · WhatsApp Integration</p>
 |---|---|
 | [✨ Features](#-features) | Core capabilities of EduFlow AI |
 | [🏗️ Architecture](#️-architecture) | How the system is built & connected |
-| [🚀 Deployment](#-deployment) | How it runs on the Azure VM |
-| [⚙️ Setup & Configuration](#️-setup--configuration) | Steps to run it yourself |
 | [📡 API Reference](#-api-reference) | Key backend routes |
+| [⚙️ Setup & Configuration](#️-setup--configuration) | Steps to run it yourself |
 | [📝 A Note](#-a-note) | Final thoughts |
 
 ---
@@ -143,38 +142,17 @@ The backend is a **FastAPI** app served by **Uvicorn**, managed by **PM2** for p
 
 ---
 
-## 🚀 Deployment
+## 📡 API Reference
 
-The application is deployed on a **Microsoft Azure VM** running Ubuntu, accessible at:
-
-> **[http://98.70.51.30](http://98.70.51.30)**
-
-### Process Management (PM2)
-
-All three services are managed by PM2:
-
-```bash
-# Start all services
-pm2 start ecosystem.config.js
-
-# Check running processes
-pm2 status
-
-# View logs for a specific service
-pm2 logs flowzint-backend
-pm2 logs flowzint-frontend
-pm2 logs flowzint-whatsapp-bot
-
-# Restart everything (e.g. after a git pull)
-pm2 restart all
-```
-
-### Pulling Updates to the VM
-
-```bash
-git pull                          # fetch latest from origin/main
-pm2 restart all                   # apply changes to running processes
-```
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/chat` | Send a student message, receive AI response + sentiment |
+| `POST` | `/api/otp/send` | Send OTP to a student's phone |
+| `POST` | `/api/otp/verify` | Verify submitted OTP |
+| `POST` | `/api/enroll` | Enroll a student into a batch |
+| `GET` | `/api/admin/chats` | Fetch all active chat sessions (admin) |
+| `POST` | `/api/admin-copilot` | Admin-facing AI copilot query |
+| `GET` | `/docs` | Auto-generated Swagger UI |
 
 ---
 
@@ -224,20 +202,6 @@ npm install
 npm run dev                      # development
 npm run build && npm run start   # production
 ```
-
----
-
-## 📡 API Reference
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/chat` | Send a student message, receive AI response + sentiment |
-| `POST` | `/api/otp/send` | Send OTP to a student's phone |
-| `POST` | `/api/otp/verify` | Verify submitted OTP |
-| `POST` | `/api/enroll` | Enroll a student into a batch |
-| `GET` | `/api/admin/chats` | Fetch all active chat sessions (admin) |
-| `POST` | `/api/admin-copilot` | Admin-facing AI copilot query |
-| `GET` | `/docs` | Auto-generated Swagger UI |
 
 ---
 
