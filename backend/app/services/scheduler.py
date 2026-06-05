@@ -140,15 +140,17 @@ def start_scheduler():
     if scheduler.running:
         return
 
-    # Demo reminders — every 10 minutes
-    scheduler.add_job(
-        _send_demo_reminders,
-        trigger=IntervalTrigger(minutes=10),
-        id="demo_reminders",
-        name="Demo WhatsApp Reminders",
-        replace_existing=True,
-        misfire_grace_time=60,
-    )
+    # Demo reminders — disabled by default to prevent spamming WHATSAPP_PHONE
+    import os
+    if os.getenv("ENABLE_DEMO_REMINDERS", "false").lower() == "true":
+        scheduler.add_job(
+            _send_demo_reminders,
+            trigger=IntervalTrigger(minutes=10),
+            id="demo_reminders",
+            name="Demo WhatsApp Reminders",
+            replace_existing=True,
+            misfire_grace_time=60,
+        )
 
     # Hot leads scoring — every 5 minutes
     scheduler.add_job(
@@ -161,7 +163,7 @@ def start_scheduler():
     )
 
     scheduler.start()
-    logger.info("[Scheduler] APScheduler started with demo reminders & hot leads jobs")
+    logger.info("[Scheduler] APScheduler started with hot leads scorer (demo reminders opt-in)")
 
 
 def stop_scheduler():
